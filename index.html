@@ -4,385 +4,70 @@
   <meta charset="utf-8">
   <title>buat ade — 13 halaman</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="surat interaktif ulang tahun — 13 halaman">
-  <meta property="og:title" content="buat ade">
-  <meta property="og:description" content="surat interaktif ulang tahun — 13 halaman">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/og.jpg">
-  <meta name="theme-color" content="#ff6b81">
-  <!-- inline favicon svg -->
-  <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" rx="24" ry="24" fill="%23ff6b81"/><path d="M24 40h80v48c0 4.4-3.6 8-8 8H32c-4.4 0-8-3.6-8-8V40z" fill="%23fff5f7"/><path d="M24 40l40 28 40-28" fill="none" stroke="%23ff6b81" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
   <style>
     :root{
-      --c-accent:#ff6b81; --c-soft:#ffd3e2; --c-paper:#fff5f7; --c-text:#3f3f3f;
-      --shadow:0 10px 30px rgba(0,0,0,.10);
-      --gap:16px; --gap-lg:24px; --radius:18px; --radius-xl:24px;
-      --maxw:920px; --speed:260ms;
+      --c-accent:#ff6b81; --c-soft:#ffd3e2; --c-paper:#fffdfd; --c-text:#333;
+      --shadow:0 8px 22px rgba(0,0,0,.08);
     }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
     body{
       margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif; color:var(--c-text);
-      background: radial-gradient(1200px 600px at 20% -10%, #ffe9f0 0%, #ffffff 60%),
-                  radial-gradient(800px 400px at 120% 0%, #ffe3ea 0%, #ffffff 50%),
-                  var(--c-paper);
+      background:linear-gradient(180deg,#ffe9f0,#fff);
+      display:flex; justify-content:center; align-items:center; min-height:100vh;
     }
-    .container{ max-width:var(--maxw); margin:0 auto; padding:20px; }
-    .card{ background:#fff; border-radius:var(--radius-xl); box-shadow:var(--shadow); position:relative; overflow:hidden; }
-
-    /* book/page frame */
-    .book{ display:grid; gap:var(--gap-lg); padding:clamp(14px,3vw,28px); }
     .page{
-      position:relative; margin:0 auto;
-      /* responsive size: fits width & height */
-      --w:min(88vw, 560px);
-      --h:min(78vh, 720px);
-      width:min(var(--w), calc(var(--h) * 0.75));
-      aspect-ratio:3/4;
-      background:var(--c-paper);
-      border-radius:22px; box-shadow:0 10px 30px rgba(0,0,0,.08);
-      border:1px solid rgba(0,0,0,.06); overflow:hidden;
-      /* subtle paper texture */
-      background-image: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.95)),
-                        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 10 10'%3E%3Ccircle cx='1' cy='1' r='.02' fill='%23d0d0d0'/%3E%3C/svg%3E");
-      background-size: auto, 140px 140px;
+      width:min(90vw,500px); height:min(80vh,680px);
+      background:var(--c-paper); border-radius:20px; box-shadow:var(--shadow);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:24px; text-align:center;
     }
-    .pad{ padding:clamp(16px,3.6vw,28px); height:100%; display:grid; place-items:center; text-align:center }
-    h1,h2,h3{ margin:0 0 8px 0 }
-    h1{ font-size:clamp(24px,4.8vw,36px); letter-spacing:.2px }
-    h2{ font-size:clamp(18px,3.8vw,24px); opacity:.92 }
-    p{ margin:0 0 12px 0 }
-    .muted{ opacity:.78 }
+    .badge{
+      width:120px; height:120px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff 0%, #ffd3e2 100%);
+      display:flex; align-items:center; justify-content:center;
+      font-size:56px; box-shadow:0 6px 16px rgba(255,107,129,.25);
+      margin-bottom:20px;
+    }
+    h1{ font-size:24px; margin:0; color:var(--c-accent) }
+    p{ font-size:14px; margin:6px 0 0; opacity:.7 }
 
-    /* opening envelope */
-    .envelope{ width:min(420px,84%); aspect-ratio:4/3; position:relative; border-radius:18px; box-shadow:var(--shadow);
-      background:linear-gradient(180deg,#fff, var(--c-paper)); overflow:hidden; margin:0 auto 10px }
-    .envelope .flap{ position:absolute; inset:auto 0 50% 0; height:62%; background:
-      linear-gradient(135deg,transparent 49.5%, var(--c-soft) 50%) left,
-      linear-gradient(-135deg,transparent 49.5%, var(--c-soft) 50%) right;
-      background-size:50% 100%; background-repeat:no-repeat }
-    .envelope .body{ position:absolute; inset:30% 0 0 0; background:var(--c-soft) }
-    .seal{ position:absolute; top:44%; left:50%; transform:translate(-50%,-50%);
-      background:var(--c-accent); color:#fff; width:74px; height:74px; border-radius:50%; display:grid; place-items:center; box-shadow:0 6px 18px rgba(255,107,129,.5); font-size:28px }
-
-    /* typewriter */
-    .type{ border-right:2px solid var(--c-accent); white-space:nowrap; overflow:hidden }
-
-    /* full-image pages */
-    .imgwrap{ position:absolute; inset:0 }
-    .imgwrap img{ width:100%; height:100%; object-fit:cover; display:block }
-    .tape{ position:absolute; width:90px; height:32px; background:rgba(255,255,255,.7); top:10px; left:50%; transform:translateX(-50%) rotate(-3deg); box-shadow:0 4px 10px rgba(0,0,0,.12); border-radius:6px }
-
-    /* quiz */
-    .quiz{ display:grid; align-content:center; gap:12px; padding:clamp(16px,3.6vw,28px); height:100% }
-    .progress{ height:8px; background:rgba(0,0,0,.08); border-radius:999px; overflow:hidden }
-    .progress>i{ display:block; height:100%; width:0%; background:var(--c-accent) }
-    .choices{ display:grid; gap:10px; margin-top:6px }
-    .choice{ padding:12px 14px; border:1px solid rgba(0,0,0,.12); border-radius:14px; cursor:pointer; background:#fff; text-align:center; font-weight:600 }
-    .choice.correct{ border-color:rgba(0,180,0,.6) }
-    .choice.wrong{ border-color:rgba(255,0,0,.5) }
-
-    /* letter block */
-    .letter{ max-width:640px; margin:0 auto; text-align:left; background:#fff; border:1px dashed rgba(0,0,0,.12);
-      border-radius:16px; padding:16px; line-height:1.7 }
-
-    /* message form */
-    .form{ display:grid; gap:12px; width:min(92%, 620px); margin:0 auto }
-    textarea{ width:100%; min-height:180px; resize:vertical; padding:12px 14px; border-radius:14px; border:1px solid rgba(0,0,0,.15); font:inherit }
-    .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center }
-
-    /* bottom nav */
-    .nav{ display:flex; align-items:center; justify-content:center; gap:12px; padding:12px }
-    .btn{ appearance:none; border:0; background:var(--c-accent); color:white; padding:12px 18px; border-radius:999px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(255,107,129,.35); transition:transform .08s ease, box-shadow .2s ease; }
-    .btn:hover{ transform:translateY(-1px) }
-    .btn[disabled]{ opacity:.5; cursor:not-allowed; box-shadow:none }
-    .btn.ghost{ background:transparent; color:var(--c-accent); border:2px solid var(--c-accent); box-shadow:none }
-    .indicator{ font-weight:700; letter-spacing:.3px }
-
-    /* page change animation */
-    .fade{ animation:fade .35s ease }
-    @keyframes fade{ from{ opacity:0; transform:translateY(6px)} to{ opacity:1; transform:none } }
-
-    /* hearts */
-    .heart{ position:fixed; pointer-events:none; font-size:20px; animation:floatUp 1.2s ease-out forwards }
-    @keyframes floatUp{ to{ transform:translateY(-120px); opacity:0 } }
-
-    footer{ text-align:center; font-size:12px; opacity:.7; padding:12px 0 32px }
-
-    /* reduced motion */
-    @media (prefers-reduced-motion:reduce){ .btn, .choice, .heart{ animation:none !important; transition:none !important } .type{ border-right:0 } }
-      /* minimal hero opening */
-    .hero{ height:100%; display:grid; place-items:center; gap:8px; padding:clamp(14px,3vw,22px) }
-    .badge{ position:relative; width:min(56%, 260px); aspect-ratio:1; border-radius:50%;
-      background: radial-gradient(120% 120% at 30% 30%, #ffffff 0%, #ffe9f0 55%, #ffd3e2 100%);
-      box-shadow: 0 8px 24px rgba(255,107,129,.25), inset 0 0 0 6px rgba(255,255,255,.7);
-      display:grid; place-items:center; }
-    .badge::after{ content:'🎂'; font-size:clamp(44px,10vw,64px); }
-    .halo{ position:absolute; inset:-18%; border-radius:50%;
-      background: radial-gradient(circle, rgba(255,107,129,.22), rgba(255,107,129,0) 60%);
-      filter: blur(10px); pointer-events:none; }
-    .title{ font-size:clamp(20px,4vw,28px); font-weight:800; letter-spacing:.3px }
-    .subtle{ font-size:13px; opacity:.68 }
-
+    .nav{ display:flex; justify-content:center; align-items:center; gap:16px; margin-top:18px }
+    .btn{ border:0; border-radius:50%; width:44px; height:44px; font-size:20px; cursor:pointer;
+      background:var(--c-accent); color:#fff; box-shadow:0 6px 16px rgba(255,107,129,.35); }
+    .btn:disabled{ opacity:.4; cursor:not-allowed }
+    .indicator{ font-weight:600; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <section class="card book" aria-live="polite">
-      <div id="page" class="page fade" aria-label="halaman"></div>
-      <div class="nav" aria-label="navigasi halaman">
-        <button id="prev" class="btn" aria-label="halaman sebelumnya">◀</button>
-        <span id="indicator" class="indicator">halaman 1/13</span>
-        <button id="next" class="btn" aria-label="halaman berikutnya">▶</button>
-      </div>
-    </section>
-    <footer class="muted">dibuat dengan <span id="emoji">💖</span> oleh <span id="fromName"></span></footer>
+  <div class="page" id="page">
+    <div class="badge">🎂</div>
+    <h1>selamat ulang tahun, ade</h1>
+    <p>dari mas aren</p>
   </div>
 
-  <script>
-  // =======================
-  // APP CONFIG (editable)
-  // =======================
-  window.APP_CONFIG = {
-    NAMA_PENERIMA: "Aina Septitsany Athiya Ramadhani",
-    NAMA_PENGIRIM: "mas aren",
-    PALETA_WARNA: ["#ff6b81","#ffd3e2","#fff5f7","#3f3f3f"],
-    FONT_STACK: "system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif",
-    KALIMAT_PEMBUKA: "hai ade, ada sesuatu buat kamu 💌",
-    PESAN_UTAMA_SINGKAT: "makasih sudah jadi rumah ter-nyaman buat aku.",
-    // 5 kuis (hal 5-9)
-    PERTANYAAN_KUIS: [
-      {"q":"pertama kali kita ketemu di mana?","a":["kampus","kfc","halte"],"correct":1},
-      {"q":"minuman favorit kamu?","a":["matcha","kopi susu","thai tea"],"correct":0},
-      {"q":"kucing idaman kita?","a":["scottish fold","anggora","british shorthair"],"correct":2},
-      {"q":"kalau nonton bareng, genre aman?","a":["romcom","thriller","anime"],"correct":0},
-      {"q":"tim yang selalu kamu dukung?","a":["chelsea","arsenal","barca"],"correct":0}
-    ],
-    // gambar (hal 2-4, 11-12)
-    GAMBAR: {
-      2: "assets/foto1.jpg",
-      3: "assets/foto2.jpg",
-      4: "assets/foto3.jpg",
-      11: "assets/foto4.jpg",
-      12: "assets/foto5.jpg"
-    },
-    SURAT_PANJANG:
-`ade,
-terima kasih sudah jadi tempat pulang paling tenang buat aku. di sela ributnya hari, kamu itu jeda yang bikin kepala pelan lagi.
+  <div class="nav">
+    <button id="prev" class="btn">◀</button>
+    <span id="indicator" class="indicator">halaman 1/13</span>
+    <button id="next" class="btn">▶</button>
+  </div>
 
-aku suka caramu merawat hal kecil: nanya udah makan apa belum, ngingetin minum, atau stiker receh yang bikin senyum muncul. sepele, tapi bikin hari terasa utuh.
-
-kalau capek datang, ingat: kita tim. kamu istirahat, aku jaga. nggak harus kuat terus, cukup jujur kalau butuh dipeluk.
-
-aku pengin kita lama, dan hangat di setiap pendeknya hari. bukan yang besar-besar terus, tapi konsisten: sarapan bareng, jalan sore, nyoret rencana, ngobrol jujur sampai ngantuk.
-
-makasih ya, ade. mari terus bareng, pelan tapi pasti, sampai jauh.`,
-    FALLBACK_EMOJI: "💖",
-    LOKALE: "id-ID"
-  };
-
-  const $ = s=>document.querySelector(s);
-  const $$ = s=>[...document.querySelectorAll(s)];
-  document.body.style.fontFamily = APP_CONFIG.FONT_STACK;
-  $('#fromName').textContent = APP_CONFIG.NAMA_PENGIRIM;
-  $('#emoji').textContent = APP_CONFIG.FALLBACK_EMOJI || '💖';
-
-  // hearts on hover for main nav buttons
-  function attachHearts(node){
-    let timer; const color=APP_CONFIG.PALETA_WARNA[0]||'#ff6b81';
-    const spawn = (x,y)=>{ const h=document.createElement('span'); h.className='heart'; h.textContent='❤'; h.style.left=x+'px'; h.style.top=y+'px'; h.style.color=color; document.body.appendChild(h); setTimeout(()=>h.remove(),1200); };
-    node.addEventListener('pointerenter', e=>{ timer=setInterval(()=>spawn(e.clientX,e.clientY), 140); });
-    node.addEventListener('pointermove', e=>{ if(timer) spawn(e.clientX,e.clientY); });
-    ['pointerleave','pointerdown','blur'].forEach(evt=>node.addEventListener(evt, ()=>{ clearInterval(timer); timer=null; }));
+<script>
+const TOTAL=13; let current=1;
+function render(){
+  const page=document.getElementById('page');
+  page.innerHTML='';
+  if(current===1){
+    page.innerHTML='<div class="badge">🎂</div><h1>selamat ulang tahun, ade</h1><p>dari mas aren</p>';
+  } else {
+    page.innerHTML=`<h1>halaman ${current}</h1>`;
   }
-  attachHearts($('#prev')); attachHearts($('#next'));
+  document.getElementById('indicator').textContent=`halaman ${current}/${TOTAL}`;
+  document.getElementById('prev').disabled=current===1;
+  document.getElementById('next').disabled=current===TOTAL;
+}
 
-  // pages definition (1..13)
-  const PAGES_TOTAL = 13;
-  let current = 1;
+document.getElementById('prev').onclick=()=>{ if(current>1){current--;render();} };
+document.getElementById('next').onclick=()=>{ if(current<TOTAL){current++;render();} };
 
-  // quiz state
-  const quiz = APP_CONFIG.PERTANYAAN_KUIS.slice(0,5);
-  let answers = new Array(quiz.length).fill(null);
-
-  // typewriter
-  function typewriter(el, text, speed=28){ el.textContent=''; let i=0; const iv=setInterval(()=>{ el.textContent=text.slice(0,++i); if(i>=text.length){ clearInterval(iv); el.classList.remove('type'); } }, speed); }
-
-  // confetti
-  function confettiBurst(count=120){ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; const colors=[APP_CONFIG.PALETA_WARNA[0]||'#ff6b81','#ffd166','#06d6a0','#118ab2','#ef476f']; for(let i=0;i<count;i++){ const p=document.createElement('i'); p.style.position='fixed'; p.style.top='-10vh'; p.style.left=(Math.random()*100)+'vw'; p.style.width='8px'; p.style.height='14px'; p.style.opacity='.9'; p.style.borderRadius='2px'; p.style.transform=`rotate(${Math.random()*360}deg)`; p.style.background=colors[i%colors.length]; p.style.animation=`fall ${0.8+Math.random()*1.8}s linear forwards`; document.body.appendChild(p); setTimeout(()=>p.remove(), 2600); } }
-
-  // render helpers
-  function renderImagePage(src){ return `<div class="imgwrap"><span class="tape" aria-hidden="true"></span><img alt="memori" src="${src}"></div>`; }
-
-  function renderOpening(){
-    return `
-      <div class="hero">
-        <div class="badge"><span class="halo" aria-hidden="true"></span></div>
-        <h1 class="title">selamat ulang tahun, ade</h1>
-        <p class="muted subtle">dari ${APP_CONFIG.NAMA_PENGIRIM}</p>
-      </div>`;
-  }</h2>
-        <h1 id="headline" class="type" aria-label="pesan utama"></h1>
-        <p class="muted">untuk ${APP_CONFIG.NAMA_PENERIMA} dari ${APP_CONFIG.NAMA_PENGIRIM}</p>
-      </div>`;
-  }
-
-  function renderQuizPage(i){
-    const qIdx = i-5; // pages 5..9
-    const q = quiz[qIdx];
-    const chosen = answers[qIdx];
-    const pct = Math.round(((qIdx)/quiz.length)*100);
-    const opts = q.a.map((opt,ix)=>{
-      const state = chosen===null? '' : (ix===q.correct? ' correct':'') + (chosen===ix && ix!==q.correct? ' wrong':'' );
-      return `<button class="choice${state}" data-ix="${ix}">${opt}</button>`;
-    }).join('');
-    return `
-      <div class="quiz">
-        <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
-        <h2 style="margin:4px 0 6px">${q.q}</h2>
-        <div class="choices" role="listbox" aria-label="pilihan jawaban">${opts}</div>
-        <p class="muted">pertanyaan ${qIdx+1} dari ${quiz.length}</p>
-      </div>`;
-  }
-
-  function renderResult(){
-    const score = answers.reduce((s,v,ix)=> s + (v===quiz[ix].correct?1:0), 0);
-    const msg = score>=4 ? 'kamu jago! 🏆' : score===3 ? 'mantap, lulus! 🎉' : 'gapapa, yang penting seru bareng 😊';
-    setTimeout(()=>{ if(score>=3) confettiBurst(90); }, 120);
-    return `
-      <div class="pad" style="gap:10px">
-        <h2>hasil kuis</h2>
-        <h1>${score}/${quiz.length}</h1>
-        <p class="muted">${msg}</p>
-        <div class="letter" style="margin-top:8px">
-          ${renderMarkdown(APP_CONFIG.SURAT_PANJANG)}
-        </div>
-        <div class="row" style="margin-top:10px">
-          <button class="btn ghost" id="copyLetter">copy surat</button>
-          <button class="btn ghost" id="retryQuiz">ulang kuis</button>
-        </div>
-      </div>`;
-  }
-
-  function renderMessage(){
-    const saved = localStorage.getItem('__ade_msg')||'';
-    return `
-      <div class="pad">
-        <div class="form">
-          <h2>tulis pesan untuk ${APP_CONFIG.NAMA_PENGIRIM}</h2>
-          <textarea id="msg" placeholder="tulis apa aja di sini...">${escapeHtml(saved)}</textarea>
-          <div class="row muted" style="justify-content:space-between">
-            <span id="counter">${saved.length} karakter</span>
-            <span>tersimpan otomatis di perangkatmu</span>
-          </div>
-          <div class="row">
-            <button class="btn" id="saveMsg">simpan</button>
-            <button class="btn ghost" id="copyMsg">copy</button>
-            <button class="btn ghost" id="dlMsg">download .txt</button>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  // very small markdown -> html (paragraphs + **bold** + *italic*)
-  function renderMarkdown(md){
-    const esc = s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
-    return md.split('\n\n').map(b=>`<p>${esc(b).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>')}</p>`).join('');
-  }
-  const escapeHtml = s=>s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
-
-  function mountPage(){
-    const wrap = $('#page');
-    wrap.classList.remove('fade'); void wrap.offsetWidth; wrap.classList.add('fade');
-
-    // content by page index
-    if(current===1){ wrap.innerHTML = renderOpening(); }
-    else if([2,3,4,11,12].includes(current)){ wrap.innerHTML = renderImagePage(APP_CONFIG.GAMBAR[current]); }
-    else if(current>=5 && current<=9){ wrap.innerHTML = renderQuizPage(current); bindQuizHandlers(); }
-    else if(current===10){ wrap.innerHTML = renderResult(); bindResultHandlers(); }
-    else if(current===13){ wrap.innerHTML = renderMessage(); bindMessageHandlers(); }
-
-    // indicator + nav state
-    $('#indicator').textContent = `halaman ${current}/${PAGES_TOTAL}`;
-    $('#prev').disabled = current===1;
-    $('#next').disabled = current===PAGES_TOTAL;
-  }
-
-  function bindQuizHandlers(){
-    const qIdx = current-5;
-    $$('.choice').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const ix = +btn.dataset.ix; answers[qIdx] = ix;
-        // re-render to lock styles
-        mountPage();
-      });
-    });
-  }
-
-  function bindResultHandlers(){
-    const copy = $('#copyLetter'); if(copy) copy.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(APP_CONFIG.SURAT_PANJANG); copy.textContent='tersalin ✔'; setTimeout(()=>copy.textContent='copy surat',1200);}catch{}});
-    const retry = $('#retryQuiz'); if(retry) retry.addEventListener('click', ()=>{ answers=new Array(quiz.length).fill(null); current=5; mountPage(); });
-  }
-
-  function bindMessageHandlers(){
-    const ta = $('#msg'); const counter=$('#counter');
-    const sync=()=>{ localStorage.setItem('__ade_msg', ta.value); counter.textContent = `${ta.value.length} karakter`; };
-    ta.addEventListener('input', sync); $('#saveMsg').addEventListener('click', sync);
-    $('#copyMsg').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(ta.value); }catch{} });
-    $('#dlMsg').addEventListener('click', ()=>{ const blob=new Blob([ta.value],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pesan-untuk-mas.txt'; a.click(); URL.revokeObjectURL(a.href); });
-  }
-
-  // nav
-  $('#prev').addEventListener('click', ()=>{ if(current>1){ current--; mountPage(); }});
-  $('#next').addEventListener('click', ()=>{ if(current<PAGES_TOTAL){ current++; mountPage(); }});
-  window.addEventListener('keydown', e=>{ if(['ArrowRight','PageDown'].includes(e.key)) $('#next').click(); if(['ArrowLeft','PageUp'].includes(e.key)) $('#prev').click(); });
-
-  // preload images for smoother experience
-  (function preload(){ const srcs = Object.values(APP_CONFIG.GAMBAR||{}); srcs.forEach(s=>{ if(!s) return; const i=new Image(); i.src=s; }); })();
-
-  // init first page
-  mountPage();
-  </script>
-
-  <!--
-  ==========================================
-  Gambar yang pas (untuk Canva / export image)
-  ==========================================
-  • Rasio yang dipakai halaman: 3:4 (portrait).
-  • Rekomendasi ukuran: 1440 × 1920 px (atau 1080 × 1440 px), JPG kualitas tinggi.
-  • Safe area (hindari teks penting terlalu tepi): margin 48 px dari semua sisi.
-  • Kompresi: target < 350 KB per gambar (tetap tajam, loading cepat).
-  • Warna: sRGB, hindari transparansi di JPG.
-
-  Struktur halaman (1..13):
-  1  — opening (envelope + pesan utama)
-  2  — foto1.jpg (full)
-  3  — foto2.jpg (full)
-  4  — foto3.jpg (full)
-  5  — kuis q1
-  6  — kuis q2
-  7  — kuis q3
-  8  — kuis q4
-  9  — kuis q5
-  10 — hasil kuis (+ surat + tombol copy)
-  11 — foto4.jpg (full)
-  12 — foto5.jpg (full)
-  13 — form tulis pesan (autosave di localStorage)
-
-  Catatan implementasi permintaan:
-  ✓ Hapus countdown & kunci.
-  ✓ Hapus tema gelap/terang (pakai desain default, kontras tinggi).
-  ✓ Hapus bagikan & musik.
-  ✓ Hapus galeri.
-  ✓ Tambah navigasi panah di bawah + indikator halaman.
-  ✓ Tambah animasi halus (fade), keyboard nav, hearts effect pada tombol.
-  ✓ Page 13: form pesan (autosave, copy, download) tanpa share WA.
-
-  Deploy cepat (GitHub Pages):
-  1) Buat repo → unggah file ini sebagai index.html.
-  2) Buat folder assets/ dan taruh: foto1.jpg, foto2.jpg, foto3.jpg, foto4.jpg, foto5.jpg, og.jpg.
-  3) Settings → Pages → Deploy from branch → main (/root).
-  4) Buka URL → test di mobile & desktop.
-  -->
+render();
+</script>
 </body>
 </html>
