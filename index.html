@@ -2,29 +2,28 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ff6b81" />
-  <title>Our Scrapbook of Love</title>
-
-  <!-- Fonts: handwriting + modern sans -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <title>our scrapbook of love — flipbook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --pink:#ff6b81;         /* utama, elegan */
-      --pink-2:#ffd0d8;       /* blush */
-      --rose:#e85b73;         /* aksen */
-      --paper:#f8efe9;        /* kertas */
-      --ink:#3d2b2b;          /* teks */
-      --tape:#e6c7a5;         /* pita/tape */
-      --shadow:0 10px 25px rgba(61,43,43,.15);
+      --pink:#ff6b81;           /* warna utama elegan */
+      --pink-soft:#ffd7df;      /* blush */
+      --ink:#3d2b2b;            /* teks */
+      --paper:#fff7f4;          /* kertas */
+      --paper2:#f9eee9;         /* variasi */
+      --tape:#e7c7a9;           /* pita */
+      --shadow:0 16px 36px rgba(61,43,43,.20);
+      --w: 900px;               /* lebar buku */
+      --h: 560px;               /* tinggi buku */
+      --radius: 18px;
+      --gap: 12px;
     }
 
-    /* Paper background + subtle texture */
     html,body{height:100%}
     body{
-      margin:0;
-      color:var(--ink);
+      margin:0; color:var(--ink);
       background:
         radial-gradient(1600px 1000px at 20% -10%, #ffe9ef 0%, #fdeaf0 35%, #f8efe9 65% , #f6e6e6 100%),
         repeating-linear-gradient(0deg, rgba(0,0,0,.02) 0 1px, transparent 1px 4px);
@@ -32,653 +31,427 @@
       line-height:1.6;
     }
 
-    /* Torn paper edges wrapper */
-    .page{
-      position:relative;
-      max-width:1080px;
-      margin:24px auto 64px;
-      background:var(--paper);
-      box-shadow:var(--shadow);
-      border-radius:22px;
-      overflow:hidden;
-    }
-    .page:before,.page:after{
-      content:"";
-      position:absolute; left:0; right:0; height:26px;
-      background:
-        radial-gradient(40px 14px at 30px 18px,rgba(0,0,0,.08),transparent 60%),
-        radial-gradient(50px 18px at 120px 16px,rgba(0,0,0,.06),transparent 60%),
-        radial-gradient(40px 14px at 210px 18px,rgba(0,0,0,.08),transparent 60%);
-      filter:blur(.5px) opacity(.25);
-      pointer-events:none;
-    }
-    .page:before{top:-6px}
-    .page:after{bottom:-6px; transform:scaleY(-1)}
+    .stage{ min-height:100dvh; display:grid; place-items:center; padding:18px; }
 
-    header{
-      padding:42px 22px 24px;
-      text-align:center;
-      position:relative;
-      background:
-        linear-gradient(180deg, rgba(255,107,129,.08), transparent 60%),
-        radial-gradient(800px 260px at 50% 0, #ffe7ee 0,#fff0f3 45%, transparent 70%);
+    /* BOOK WRAP */
+    .book-wrap{ position:relative; width:min(100%, var(--w)); }
+    .book{ position:relative; width:100%; height:var(--h); margin:0 auto; perspective:1800px; }
+
+    /* spread viewport */
+    .spread{ position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:0; }
+    .page{
+      background:linear-gradient(180deg,#fff, var(--paper) 65%);
+      border-radius:var(--radius);
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.05), var(--shadow);
+      position:relative; overflow:hidden;
     }
-    .title{
-      font-family:'Dancing Script',cursive;
-      font-size: clamp(36px, 5vw, 64px);
-      color:var(--rose);
-      margin:0 0 4px;
-      letter-spacing:.5px;
+    .page:before{ /* subtle paper fiber */
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:repeating-linear-gradient(0deg, rgba(0,0,0,.02) 0 1px, transparent 1px 6px);
+      opacity:.4;
+    }
+    .gutter{ position:absolute; left:calc(50% - .5px); top:0; bottom:0; width:1px; background:linear-gradient(180deg,#00000036,#00000010 40%, transparent); z-index:2 }
+
+    /* cover overlay */
+    .cover{
+      position:absolute; inset:0; border-radius:var(--radius);
+      background:linear-gradient(180deg, #ffedf1, #ffe3ea), url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop') center/cover;
+      box-shadow:var(--shadow);
+      display:grid; place-items:center; text-align:center; z-index:5;
+    }
+    .cover .title{
+      font-family:'Dancing Script',cursive; font-size:clamp(40px,6vw,68px); color:#b44a60; margin:0 12px 2px;
       text-shadow:0 2px 0 #fff;
     }
-    .subtitle{
-      margin:0;
-      font-size:clamp(14px,2.2vw,18px);
-      opacity:.9;
-    }
+    .cover .subtitle{ opacity:.85; margin:0 12px 18px }
+    .btn{ border:0; cursor:pointer; font-weight:700; padding:10px 16px; border-radius:999px; box-shadow:0 8px 20px rgba(255,107,129,.32); transition:transform .15s ease, filter .15s ease }
+    .btn.primary{ background:var(--pink); color:#fff }
+    .btn:hover{ transform:translateY(-1px) scale(1.02); filter:brightness(1.04) }
 
-    /* toolbar */
-    .toolbar{
-      display:flex; gap:10px; justify-content:center; align-items:center;
-      margin-top:16px;
-    }
-    .btn{
-      border:0;
-      background:var(--pink);
-      color:#fff;
-      padding:10px 14px;
-      border-radius:999px;
-      box-shadow:0 6px 16px rgba(255,107,129,.3);
-      font-weight:600;
-      cursor:pointer;
-      transition:transform .15s ease, filter .15s ease, background .2s ease;
-    }
-    .btn:hover{ transform:translateY(-1px) scale(1.02); filter:brightness(1.05) }
-    .btn.outline{
-      background:#fff; color:var(--rose); border:2px solid var(--rose);
-      box-shadow:0 6px 16px rgba(232,91,115,.15);
-    }
-    .icon-heart{
-      width:20px; height:20px; vertical-align:-3px; fill:currentColor;
-      margin-right:6px;
-    }
+    /* page content primitives */
+    .pad{ padding:16px }
+    .h-title{ font-family:'Dancing Script',cursive; color:#a44d5d; font-size:34px; margin:6px 0 4px }
+    .tag{ display:inline-block; background:var(--pink-soft); color:#8d5a62; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700 }
 
-    /* slideshow */
-    .slideshow{
-      position:relative;
-      padding:24px 12px 12px;
-    }
-    .slides{
-      position:relative;
-      height:360px;
-      max-width:940px; margin:0 auto;
-      border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
-    }
-    .slides figure{
-      position:absolute; inset:0; margin:0;
-      background-size:cover; background-position:center;
-      opacity:0; transform:scale(1.04);
-      transition:opacity 1.2s ease, transform 1.2s ease;
-    }
-    .slides figure.active{ opacity:1; transform:scale(1) }
-    .slides .caption{
-      position:absolute; left:16px; bottom:16px;
-      background:rgba(255,255,255,.82);
-      padding:10px 14px; border-radius:14px; backdrop-filter:blur(4px);
-      font-weight:600;
-    }
-    .slide-controls{
-      position:absolute; inset:auto 0 10px 0; display:flex; gap:8px; justify-content:center;
-    }
-    .pill{
-      width:34px; height:34px; border-radius:50%;
-      border:2px solid #fff; background:rgba(255,255,255,.7); cursor:pointer;
-      display:grid; place-content:center; backdrop-filter:blur(4px);
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
-    }
-
-    /* scrapbook gallery */
-    .section-title{
-      text-align:center; margin:34px 0 12px;
-      font-weight:700; color:#a14c5c;
-    }
-    .gallery{
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-      gap:14px; padding:10px 18px 24px; max-width:980px; margin:0 auto;
-    }
-    .polaroid{
-      background:#fff; padding:10px 10px 26px; border-radius:8px;
-      position:relative; box-shadow:var(--shadow);
-      transform: rotate(calc(var(--r,0deg)));
-      transition: transform .25s ease, filter .25s ease;
-      cursor:pointer;
-    }
-    .polaroid:hover{ transform:rotate(calc(var(--r,0deg))) translateY(-3px) scale(1.02) }
+    .polaroids{ position:relative; height:100%; }
+    .polaroid{ position:absolute; width:46%; background:#fff; padding:10px 10px 30px; border-radius:8px; box-shadow:var(--shadow); transform:rotate(var(--rot)); }
     .polaroid img{ width:100%; height:180px; object-fit:cover; border-radius:6px }
-    .tape{
-      position:absolute; top:-8px; left:22px; right:22px; height:22px;
-      background:linear-gradient(180deg, rgba(0,0,0,.05), transparent),
-                 repeating-linear-gradient(90deg, rgba(255,255,255,.25) 0 6px, rgba(0,0,0,.04) 6px 12px);
-      border-radius:6px; transform:rotate(-2deg);
-      box-shadow:0 4px 8px rgba(0,0,0,.08) inset; opacity:.9;
-    }
+    .tape{ position:absolute; top:-10px; left:22px; right:22px; height:22px; background:linear-gradient(180deg, rgba(0,0,0,.05), transparent), repeating-linear-gradient(90deg, rgba(255,255,255,.25) 0 6px, rgba(0,0,0,.04) 6px 12px); border-radius:6px; transform:rotate(-2deg) }
     .label{ position:absolute; bottom:6px; left:0; right:0; text-align:center; font-size:13px; opacity:.8 }
 
-    /* sticky notes board (messages) */
-    .board{
-      padding:10px 18px 28px; max-width:980px; margin:0 auto;
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-      gap:14px;
-    }
-    .note{
-      background:var(--pink-2);
-      color:#4a3a3a;
-      padding:12px 12px 16px; border-radius:10px;
-      box-shadow:var(--shadow);
-      transform:rotate(calc(var(--rot)*1deg));
-      position:relative;
-      min-height:90px;
-      white-space:pre-wrap;
-      word-break:break-word;
-      animation:pop .25s ease;
-      cursor:grab;
-    }
-    @keyframes pop{ from{ transform:scale(.92) rotate(var(--rot,0deg)) } }
-    .pin{
-      position:absolute; width:10px; height:10px; border-radius:50%;
-      background:#d86b6b; top:-6px; left:12px; box-shadow:0 2px 4px rgba(0,0,0,.25)
-    }
-    .note .x{
-      position:absolute; right:8px; top:6px; font-weight:700; opacity:.3; cursor:pointer;
-    }
-    .message-form{
-      max-width:940px; margin:10px auto 8px; display:flex; gap:8px; padding:0 18px;
-    }
-    textarea{
-      flex:1; min-height:70px; border-radius:12px; border:2px dashed #e3b6c1; padding:10px 12px;
-      background:#fff; outline:none; resize:vertical;
-    }
+    .card{ background:linear-gradient(180deg,#fff,#fff7fa); border:2px dashed #f2c4cf; border-radius:14px; box-shadow:var(--shadow); padding:12px; }
+    .small{ font-size:13px; opacity:.8 }
 
-    /* quiz */
-    .quiz{
-      max-width:940px; margin:16px auto 30px; padding:0 18px;
-    }
-    .card{
-      background:#fff; border-radius:16px; box-shadow:var(--shadow);
-      padding:16px 16px 8px; position:relative; overflow:hidden;
-    }
-    .card:after{
-      content:""; position:absolute; top:0; right:-40px; width:140px; height:90px;
-      background:radial-gradient(110px 60px at 20px 20px, rgba(255,107,129,.15), transparent 70%);
-      transform:rotate(-8deg);
-    }
-    .q{font-weight:700; margin:10px 0 6px}
-    .options{ display:grid; gap:6px; margin-bottom:8px }
-    .options label{
-      display:flex; align-items:center; gap:8px;
-      padding:8px 10px; border:1px dashed #e1b7bf; border-radius:10px; background:#fff4f6;
-      cursor:pointer;
-    }
-    .result{
-      margin-top:12px; background:linear-gradient(180deg,#fff4f7,#fff);
-      border:2px solid #ffd5de; border-radius:14px; padding:12px; display:none;
-    }
+    .q-box{ margin-top:10px; background:#fff; border:1px dashed #e1b7bf; border-radius:12px; padding:10px }
+    .q{ font-weight:700; margin:0 0 4px }
+    .opts{ display:grid; gap:6px }
+    .opts label{ display:flex; align-items:center; gap:8px; padding:6px 8px; background:#fff6f8; border-radius:10px; cursor:pointer }
 
-    /* timeline */
-    .timeline{
-      max-width:980px; margin:10px auto 40px; padding:8px 18px 20px;
-    }
-    .line{
-      position:relative; padding-left:24px; margin:14px 0;
-    }
-    .line:before{
-      content:""; position:absolute; left:8px; top:4px; bottom:-8px; width:2px; background:linear-gradient(180deg,var(--pink),transparent);
-    }
-    .dot{
-      width:12px; height:12px; border-radius:50%; background:var(--pink); position:absolute; left:3px; top:0; box-shadow:0 0 0 4px #ffd5de66;
-    }
-    .entry{
-      background:#fff; border-left:4px solid var(--pink); padding:10px 12px; border-radius:8px; box-shadow:var(--shadow);
-    }
-    .date{ font-weight:700; color:#a14c5c }
+    /* page-turn animation overlay */
+    .flip{ position:absolute; top:0; bottom:0; width:50%; right:0; transform-origin:left; background:linear-gradient(90deg, #fff, #f7eaea); border-radius:0 var(--radius) var(--radius) 0; box-shadow:inset -12px 0 30px rgba(0,0,0,.15); z-index:6 }
+    .flip.left{ left:0; right:auto; transform-origin:right; border-radius:var(--radius) 0 0 var(--radius); box-shadow:inset 12px 0 30px rgba(0,0,0,.15) }
+    @keyframes flipNext{ from{ transform:rotateY(0deg) } 50%{ transform:rotateY(-90deg) } to{ transform:rotateY(-180deg) } }
+    @keyframes flipPrev{ from{ transform:rotateY(-180deg) } 50%{ transform:rotateY(-90deg) } to{ transform:rotateY(0deg) } }
 
-    /* lightbox for gallery */
-    .lightbox{ position:fixed; inset:0; backdrop-filter:blur(3px); background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:40 }
-    .lightbox.open{ display:flex }
-    .lb-card{
-      background:#fff; border-radius:16px; box-shadow:0 16px 40px rgba(0,0,0,.35); max-width:min(92vw,900px);
-      overflow:hidden;
-    }
-    .lb-img{ width:100%; height:min(70vh,560px); object-fit:cover; display:block }
-    .lb-caption{ padding:12px 14px }
-    .lb-close{ position:absolute; top:18px; right:18px; border:0; background:#fff; padding:6px 10px; border-radius:999px; cursor:pointer }
+    /* arrows */
+    .nav{ display:flex; justify-content:center; gap:12px; margin-top:14px }
+    .arrow{ width:52px; height:52px; border-radius:50%; border:0; cursor:pointer; background:var(--pink); color:#fff; box-shadow:0 10px 24px rgba(255,107,129,.35); font-size:22px; line-height:0; display:grid; place-items:center }
+    .arrow[disabled]{ filter:grayscale(.7) opacity(.5); cursor:not-allowed }
 
-    /* confetti hearts */
+    .gutter-sticker{ position:absolute; width:58px; height:58px; left:calc(50% - 29px); top:8px; background:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=240&auto=format&fit=crop') center/cover no-repeat; transform:rotate(-8deg); border-radius:50%; box-shadow:0 6px 14px rgba(0,0,0,.25) }
+
+    /* sticky note page */
+    .note-board{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; height:260px; overflow:auto; padding-right:4px }
+    .note{ background:var(--pink-soft); color:#4a3a3a; padding:10px 10px 14px; border-radius:10px; box-shadow:var(--shadow); white-space:pre-wrap; word-break:break-word; position:relative }
+    .note .pin{ position:absolute; width:10px; height:10px; border-radius:50%; background:#d86b6b; top:-6px; left:12px; box-shadow:0 2px 4px rgba(0,0,0,.25) }
+    .note .x{ position:absolute; right:8px; top:6px; font-weight:700; opacity:.35; cursor:pointer }
+
+    /* result page */
+    .result{ display:flex; gap:10px; align-items:center; background:linear-gradient(180deg,#fff4f7,#fff); border:2px solid #ffd5de; border-radius:14px; padding:12px }
+
+    /* heart confetti */
     .confetti{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50 }
-    .heart{
-      position:absolute; width:16px; height:16px; transform:rotate(45deg);
-      background:var(--pink); opacity:.9; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2));
-      animation:fall 2.4s ease-in forwards;
-    }
-    .heart:before,.heart:after{
-      content:""; position:absolute; width:16px; height:16px; background:var(--pink); border-radius:50%;
-      top:-8px; left:0; 
-    }
-    .heart:after{ left:-8px; top:0 }
-    @keyframes fall{
-      0%{ transform:translateY(-60px) rotate(45deg) scale(.8); opacity:0 }
-      10%{ opacity:1 }
-      90%{ opacity:.95 }
-      100%{ transform:translateY(110vh) rotate(45deg) scale(1.2); opacity:0 }
-    }
+    .heart{ position:absolute; width:16px; height:16px; transform:rotate(45deg); background:var(--pink); opacity:.9; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2)); animation:fall 2.4s ease-in forwards }
+    .heart:before,.heart:after{ content:""; position:absolute; width:16px; height:16px; background:var(--pink); border-radius:50% }
+    .heart:before{ top:-8px; left:0 }
+    .heart:after{ top:0; left:-8px }
+    @keyframes fall{ 0%{ transform:translateY(-60px) rotate(45deg) scale(.8); opacity:0 } 10%{ opacity:1 } 90%{ opacity:.95 } 100%{ transform:translateY(110vh) rotate(45deg) scale(1.2); opacity:0 } }
 
-    footer{
-      text-align:center; padding:18px; color:#8b6b6b;
-      background:linear-gradient(180deg,transparent,#fff 30%);
-    }
-
-    /* responsive */
-    @media (max-width:640px){
-      .slides{ height:280px }
-      .polaroid img{ height:150px }
-    }
+    @media (max-width:980px){ :root{ --w: 92vw; --h: 70vh } .note-board{ grid-template-columns:1fr } }
   </style>
 </head>
 <body>
-  <div class="page" id="page">
-
-    <header>
-      <h1 class="title">Our Scrapbook of Love</h1>
-      <p class="subtitle">Every page tells our story</p>
-
-      <div class="toolbar">
-        <button class="btn outline" id="musicBtn" aria-label="toggle music">🎵 music: off</button>
-        <button class="btn" id="heartBtn" aria-label="celebrate love">
-          <svg class="icon-heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.35-9.5-8.62C.7 8.5 2.6 5 6 5c2.2 0 3.4 1.33 4 2.1C10.6 6.33 11.8 5 14 5c3.4 0 5.3 3.5 3.5 7.38C19.5 16.65 12 21 12 21z"/></svg>
-          love burst
-        </button>
-      </div>
-    </header>
-
-    <!-- Slideshow -->
-    <section class="slideshow" aria-label="slideshow">
-      <div class="slides" id="slides">
-        <!-- Replace backgrounds with your photos -->
-        <figure style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop');" class="active">
-          <figcaption class="caption">moments that made mas & ade smile</figcaption>
-        </figure>
-        <figure style="background-image:url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop');">
-          <figcaption class="caption">soft sunsets & warm hands</figcaption>
-        </figure>
-        <figure style="background-image:url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1600&auto=format&fit=crop');">
-          <figcaption class="caption">little adventures, big memories</figcaption>
-        </figure>
-      </div>
-      <div class="slide-controls" aria-hidden="true">
-        <div class="pill" id="prev">&#9664;</div>
-        <div class="pill" id="next">&#9654;</div>
-      </div>
-    </section>
-
-    <!-- Gallery -->
-    <h3 class="section-title">scrapbook gallery</h3>
-    <section class="gallery" id="gallery">
-      <!-- Example cards — ganti URL & caption sesuai kebutuhan -->
-      <div class="polaroid" style="--r:-3deg">
-        <div class="tape"></div>
-        <img src="https://images.unsplash.com/photo-1532980400857-e8d9d275d858?q=80&w=1200&auto=format&fit=crop" alt="polaroid 1">
-        <div class="label">first trip</div>
-      </div>
-      <div class="polaroid" style="--r:2deg">
-        <div class="tape"></div>
-        <img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?q=80&w=1200&auto=format&fit=crop" alt="polaroid 2">
-        <div class="label">city lights</div>
-      </div>
-      <div class="polaroid" style="--r:4deg">
-        <div class="tape"></div>
-        <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop" alt="polaroid 3">
-        <div class="label">cozy day</div>
-      </div>
-      <div class="polaroid" style="--r:-5deg">
-        <div class="tape"></div>
-        <img src="https://images.unsplash.com/photo-1494200914708-16b42b9fb824?q=80&w=1200&auto=format&fit=crop" alt="polaroid 4">
-        <div class="label">laughs</div>
-      </div>
-      <div class="polaroid" style="--r:1deg">
-        <div class="tape"></div>
-        <img src="https://images.unsplash.com/photo-1504198458649-3128b932f49b?q=80&w=1200&auto=format&fit=crop" alt="polaroid 5">
-        <div class="label">new chapter</div>
-      </div>
-    </section>
-
-    <!-- Message board -->
-    <h3 class="section-title">leave a sweet note</h3>
-    <form class="message-form" id="msgForm">
-      <textarea id="msg" placeholder="Write your sweet message here…"></textarea>
-      <button class="btn" type="submit">post</button>
-      <button class="btn outline" type="button" id="clearNotes">clear</button>
-    </form>
-    <section class="board" id="board" aria-live="polite"></section>
-
-    <!-- Quiz -->
-    <h3 class="section-title">love quiz</h3>
-    <section class="quiz">
-      <div class="card" id="quizCard">
-        <form id="quizForm">
-          <div class="q">1) Apa momen favorit mas & ade bareng?</div>
-          <div class="options">
-            <label><input type="radio" name="q1" value="sweet"> dinner anniversary</label>
-            <label><input type="radio" name="q1" value="adventure"> road trip dadakan</label>
-            <label><input type="radio" name="q1" value="cozy"> movie night & cemilan</label>
-            <label><input type="radio" name="q1" value="classic"> foto polaroid pertama</label>
+  <div class="stage">
+    <div class="book-wrap">
+      <div class="book" id="book">
+        <div class="gutter"></div>
+        <div class="gutter-sticker" title="love"></div>
+        <div class="spread" id="spread"><!-- content injected via JS --></div>
+        <div class="cover" id="cover">
+          <div>
+            <h1 class="title">our scrapbook of love</h1>
+            <div class="subtitle">every page tells our story</div>
+            <div style="margin-top:12px"><button class="btn primary" id="openBtn">open</button></div>
           </div>
-
-          <div class="q">2) Siapa yang duluan bilang “mas sayang ade”?</div>
-          <div class="options">
-            <label><input type="radio" name="q2" value="sweet"> mas</label>
-            <label><input type="radio" name="q2" value="sweet"> ade</label>
-            <label><input type="radio" name="q2" value="classic"> barengan (kompak)</label>
-            <label><input type="radio" name="q2" value="cozy"> ditulis di kertas kecil</label>
-          </div>
-
-          <div class="q">3) Kalau mas & ade liburan, ade lebih pilih?</div>
-          <div class="options">
-            <label><input type="radio" name="q3" value="adventure"> gunung</label>
-            <label><input type="radio" name="q3" value="sweet"> pantai</label>
-            <label><input type="radio" name="q3" value="cozy"> staycation</label>
-            <label><input type="radio" name="q3" value="classic"> city tour</label>
-          </div>
-
-          <div class="q">4) Makanan favorit mas & ade saat kencan?</div>
-          <div class="options">
-            <label><input type="radio" name="q4" value="classic"> makanan rumahan</label>
-            <label><input type="radio" name="q4" value="adventure"> kulineran unik</label>
-            <label><input type="radio" name="q4" value="cozy"> dessert & kopi</label>
-            <label><input type="radio" name="q4" value="sweet"> seafood di tepi pantai</label>
-          </div>
-
-          <div class="q">5) Satu kata untuk mas & ade?</div>
-          <div class="options">
-            <label><input type="radio" name="q5" value="sweet"> soulmate</label>
-            <label><input type="radio" name="q5" value="adventure"> explorers</label>
-            <label><input type="radio" name="q5" value="cozy"> home</label>
-            <label><input type="radio" name="q5" value="classic"> forever</label>
-          </div>
-
-          <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px">
-            <button class="btn" type="submit">lihat hasil</button>
-            <button class="btn outline" type="button" id="resetQuiz">ulang</button>
-          </div>
-        </form>
-
-        <div class="result" id="quizResult"></div>
-      </div>
-    </section>
-
-    <!-- Memory Timeline -->
-    <h3 class="section-title">memory timeline</h3>
-    <section class="timeline" id="timeline">
-      <div class="line">
-        <div class="dot"></div>
-        <div class="entry">
-          <div class="date">12 Feb 2023</div>
-          <div>mas & ade mulai ngobrol tiap malam, nyambungnya kebangetan.</div>
         </div>
       </div>
-      <div class="line">
-        <div class="dot"></div>
-        <div class="entry">
-          <div class="date">25 Apr 2023</div>
-          <div>first date + foto polaroid yang sekarang jadi ikon scrapbook ini.</div>
-        </div>
+      <div class="nav">
+        <button class="arrow" id="prev" disabled aria-label="halaman sebelumnya">&#9664;</button>
+        <button class="arrow" id="heart" title="love burst">💗</button>
+        <button class="arrow" id="next" aria-label="halaman berikutnya">&#9654;</button>
       </div>
-      <div class="line">
-        <div class="dot"></div>
-        <div class="entry">
-          <div class="date">30 Sep 2023</div>
-          <div>short trip — sunrise, kopi hangat, cerita panjang.</div>
-        </div>
-      </div>
-      <div class="line">
-        <div class="dot"></div>
-        <div class="entry">
-          <div class="date">14 Feb 2024</div>
-          <div>mas bilang “mas sayang ade” (lagi) sambil selipin sticky note kecil.</div>
-        </div>
-      </div>
-    </section>
-
-    <footer>made with love just for ade ❤️</footer>
-  </div>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" aria-modal="true" role="dialog">
-    <button class="lb-close" id="lbClose">close ✕</button>
-    <div class="lb-card">
-      <img id="lbImg" class="lb-img" alt="preview">
-      <div class="lb-caption" id="lbCap"></div>
     </div>
   </div>
 
-  <!-- Confetti Layer -->
   <div class="confetti" id="confetti"></div>
 
   <script>
-    /* =========================================================
-       Minimal helper utilities
-       ========================================================= */
-    const $ = (sel, ctx=document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-    const rand = (a,b) => Math.random()*(b-a)+a;
+    // util
+    const $ = (s, c=document)=>c.querySelector(s);
+    const $$ = (s, c=document)=>Array.from(c.querySelectorAll(s));
+    const rand=(a,b)=>Math.random()*(b-a)+a;
 
-    /* =========================================================
-       Slideshow
-       ========================================================= */
-    (function(){
-      const slides = $$('#slides figure');
-      let i = 0, t = null;
-      function show(n){
-        slides[i].classList.remove('active');
-        i = (n + slides.length) % slides.length;
-        slides[i].classList.add('active');
-      }
-      function next(){ show(i+1) }
-      function prev(){ show(i-1) }
-      function loop(){
-        clearInterval(t);
-        t = setInterval(next, 5000);
-      }
-      $('#next').addEventListener('click', ()=>{ next(); loop(); });
-      $('#prev').addEventListener('click', ()=>{ prev(); loop(); });
-      loop();
-    })();
+    // state
+    let index = 0; // 0 = cover, then 1..N spreads
+    const answers = {}; // quiz answers {q1: 'sweet', ...}
 
-    /* =========================================================
-       Gallery -> Lightbox popup
-       ========================================================= */
-    (function(){
-      const lb = $('#lightbox'), lbImg = $('#lbImg'), lbCap = $('#lbCap');
-      $$('#gallery .polaroid').forEach(card=>{
-        card.addEventListener('click', ()=>{
-          const img = card.querySelector('img');
-          lbImg.src = img.src;
-          lbImg.alt = img.alt || 'preview';
-          lbCap.textContent = card.querySelector('.label')?.textContent || '';
-          lb.classList.add('open');
-        });
-      });
-      $('#lbClose').addEventListener('click', ()=> lb.classList.remove('open'));
-      lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.classList.remove('open') });
-    })();
+    // spreads: helper to build two pages
+    function spread(leftHtml, rightHtml){
+      return `
+        <div class="page left">${leftHtml}</div>
+        <div class="page right">${rightHtml}</div>
+      `;
+    }
 
-    /* =========================================================
-       Sticky Notes (messages) - stored in localStorage
-       - auto-replace "kamu"->"ade" and "aku"->"mas" per request
-       ========================================================= */
-    (function(){
-      const KEY='scrap_notes_v1';
-      const board = $('#board');
-      const load = ()=> JSON.parse(localStorage.getItem(KEY)||'[]');
-      const save = (arr)=> localStorage.setItem(KEY, JSON.stringify(arr));
-      function render(){
-        board.innerHTML='';
-        const arr = load();
-        arr.forEach((n, idx)=> addNote(n.text, n.rot, idx, false));
-      }
-      function addNote(text, rot, idx, persist=true){
-        const el = document.createElement('div');
-        el.className='note';
-        el.style.setProperty('--rot', rot ?? Math.round(rand(-3,3)));
-        el.innerHTML = '<div class="pin"></div><div class="x" title="hapus">×</div>'+escapeHtml(text);
-        el.querySelector('.x').addEventListener('click', ()=>{
-          const arr = load(); arr.splice(idx ?? Array.from(board.children).indexOf(el),1); save(arr); render();
-        });
-        board.appendChild(el);
-        if(persist){
-          const arr = load(); arr.push({text, rot: parseFloat(el.style.getPropertyValue('--rot'))}); save(arr);
-        }
-      }
-      function escapeHtml(str){ const t=document.createElement('div'); t.textContent=str; return t.innerHTML; }
+    // components
+    const polaroid = (src,label,rot)=>`
+      <figure class="polaroid" style="--rot:${rot||'-4deg'}; left:${Math.round(rand(4,48))}%; top:${Math.round(rand(4,52))}%">
+        <div class="tape"></div>
+        <img src="${src}" alt="${label}"><div class="label">${label}</div>
+      </figure>`;
 
-      $('#msgForm').addEventListener('submit', e=>{
-        e.preventDefault();
-        let txt = $('#msg').value.trim();
-        if(!txt) return;
-        // enforce wording rule
-        txt = txt.replace(/\b(kamu)\b/gi,'ade').replace(/\b(aku)\b/gi,'mas');
-        addNote(txt);
-        $('#msg').value='';
-      });
-      $('#clearNotes').addEventListener('click', ()=>{
-        if(confirm('hapus semua sticky notes?')){ localStorage.removeItem(KEY); render(); }
-      });
+    const qBox = (no,question,opts)=>{
+      const name=`q${no}`;
+      const radios = opts.map(([val,text])=>`
+        <label><input type="radio" name="${name}" value="${val}"> ${text}</label>
+      `).join('');
+      return `
+        <div class="q-box" data-q="${no}">
+          <div class="q">${no}) ${question}</div>
+          <div class="opts">${radios}</div>
+        </div>`
+    }
 
-      render();
-    })();
-
-    /* =========================================================
-       Love Quiz – ≥5 questions, result categories
-       Categories: sweet | adventure | cozy | classic
-       ========================================================= */
-    (function(){
-      const form = $('#quizForm'), out = $('#quizResult'), resetBtn = $('#resetQuiz');
-      const titles = {
-        sweet: 'The Perfect Match',
-        adventure: 'Adventure Duo',
-        cozy: 'Forever Sweetheart',
-        classic: 'Timeless Lovers'
-      };
-      const blurbs = {
-        sweet: 'mas & ade pasangan manis—tiap hari terasa ulang tahun. perhatian kecil = bahasa cinta kalian.',
-        adventure: 'mas & ade cocok jadi partner petualangan. rencana spontan = energi kebahagiaan.',
-        cozy: 'mas & ade itu rumah. momen sederhana bikin hati selalu pulang.',
-        classic: 'mas & ade elegan & solid. tradisi dan komitmen bikin cerita panjang.'
-      };
-      form.addEventListener('submit', e=>{
-        e.preventDefault();
-        const data = new FormData(form);
-        const scores = {sweet:0, adventure:0, cozy:0, classic:0};
-        // ensure all answered
-        for(let q=1;q<=5;q++){
-          const v = data.get('q'+q);
-          if(!v){ alert('tolong jawab semua pertanyaan dulu ya, ade ❤️'); return; }
-          scores[v]++
-        }
-        const best = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
-        out.innerHTML = `
-          <div style="display:flex;gap:12px;align-items:center">
-            <div style="width:54px;height:54px;border-radius:14px;background:var(--pink-2);display:grid;place-content:center;font-size:24px">💞</div>
-            <div>
-              <div style="font-weight:800;color:#a14c5c">${titles[best]}</div>
-              <div>${blurbs[best]}</div>
+    // spreads content (inspired by contoh gambar). semua teks pakai "mas" & "ade".
+    const spreads = [
+      // 1
+      spread(
+        `
+          <div class="pad">
+            <div class="h-title">special forever</div>
+            <div class="small">momen yang bikin senyum muncul tiap diingat.</div>
+            <div class="polaroids">
+              ${polaroid('https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?q=80&w=1200&auto=format&fit=crop','first walk','-5deg')}
+              ${polaroid('https://images.unsplash.com/photo-1504198453319-5ce911bafcde?q=80&w=1200&auto=format&fit=crop','sunset talk','6deg')}
             </div>
-          </div>`;
-        out.style.display='block';
-        out.scrollIntoView({behavior:'smooth',block:'center'});
-      });
-      resetBtn.addEventListener('click', ()=>{
-        form.reset(); out.style.display='none'; out.innerHTML='';
-      });
-    })();
+          </div>
+        `,
+        `
+          <div class="pad">
+            <div class="card">
+              <div class="tag">happy birthday</div>
+              <p>semoga semua niat baik mas & ade disegerakan. terima kasih sudah jadi rumah paling hangat.</p>
+            </div>
+            ${qBox(1,'apa momen favorit mas & ade bareng?',[
+              ['sweet','dinner anniversary'],
+              ['adventure','road trip dadakan'],
+              ['cozy','movie night + cemilan'],
+              ['classic','foto polaroid pertama']
+            ])}
+          </div>
+        `
+      ),
+      // 2
+      spread(
+        `
+          <div class="pad">
+            <div class="card" style="margin-top:6px">
+              <p><strong>selamat ulang tahun, sayangku.</strong><br> semoga mas berhasil jadi orang pertama yang ngucapin, dan yang terpenting, tahun ini mas masih nemenin hari spesial ade.</p>
+            </div>
+            ${qBox(2,'siapa yang duluan bilang “mas sayang ade”?',[
+              ['sweet','mas'],['sweet','ade'],['classic','barengan (kompak)'],['cozy','ditulis di kertas kecil']
+            ])}
+          </div>
+        `,
+        `
+          <div class="pad">
+            <div class="polaroids">
+              ${polaroid('https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop','garden laugh','4deg')}
+              ${polaroid('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop','city bridge','-2deg')}
+            </div>
+          </div>
+        `
+      ),
+      // 3
+      spread(
+        `
+          <div class="pad">
+            <div class="polaroids">
+              ${polaroid('https://images.unsplash.com/photo-1529336953121-a0c0f7aa6abc?q=80&w=1200&auto=format&fit=crop','soft morning','-3deg')}
+              ${polaroid('https://images.unsplash.com/photo-1475724017904-b712052c192a?q=80&w=1200&auto=format&fit=crop','lights & smiles','5deg')}
+            </div>
+          </div>
+        `,
+        `
+          <div class="pad">
+            <div class="card">
+              <p>di usia ade sekarang, semesta semakin berpihak. semoga yang diperjuangkan pelan-pelan datang dan tinggal.</p>
+            </div>
+            ${qBox(3,'kalau liburan, ade lebih pilih?',[
+              ['adventure','gunung'],['sweet','pantai'],['cozy','staycation'],['classic','city tour']
+            ])}
+          </div>
+        `
+      ),
+      // 4
+      spread(
+        `
+          <div class="pad">
+            <div class="h-title">me and you</div>
+            <div class="small">now & forever.</div>
+            <div class="card" style="margin-top:8px">
+              <p>mas sayang ade di hari ulang tahun ini, dan setiap hari, sekarang dan selamanya.</p>
+            </div>
+          </div>
+        `,
+        `
+          <div class="pad">
+            ${qBox(4,'makanan favorit mas & ade saat kencan?',[
+              ['classic','makanan rumahan'],['adventure','kulineran unik'],['cozy','dessert & kopi'],['sweet','seafood pinggir pantai']
+            ])}
+            <div class="polaroids" style="height:240px">
+              ${polaroid('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=1200&auto=format&fit=crop','date night','-2deg')}
+            </div>
+          </div>
+        `
+      ),
+      // 5
+      spread(
+        `
+          <div class="pad">
+            <div class="card">
+              <p>terima kasih sudah menerima lebih-kurangnya mas. jangan bosan ya, ade. mas berantakan kalau nggak ada ade.</p>
+            </div>
+          </div>
+        `,
+        `
+          <div class="pad">
+            ${qBox(5,'satu kata untuk mas & ade?',[
+              ['sweet','soulmate'],['adventure','explorers'],['cozy','home'],['classic','forever']
+            ])}
+            <div class="polaroids" style="height:230px">
+              ${polaroid('https://images.unsplash.com/photo-1510771463146-e89e6e86560e?q=80&w=1200&auto=format&fit=crop','warm hug','3deg')}
+            </div>
+          </div>
+        `
+      ),
+      // 6 — message page (sticky notes inside page)
+      spread(
+        `
+          <div class="pad">
+            <div class="h-title">write a sweet note</div>
+            <div class="small">tuliskan pesan manis untuk ditempel di buku ini.</div>
+            <div class="card" style="margin-top:8px">
+              <textarea id="msg" placeholder="write your sweet message here…" style="width:100%;min-height:90px;border-radius:10px;border:1px dashed #e1b7bf;padding:8px"></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px"><button class="btn primary" id="post">kirim</button><button class="btn" style="background:#fff;color:#b44a60;border:2px solid #b44a60" id="clear">hapus semua</button></div>
+              <div class="small" style="margin-top:6px">otomatis ganti kata: "kamu"→"ade", "aku"→"mas".</div>
+            </div>
+          </div>
+        `,
+        `
+          <div class="pad">
+            <div class="h-title">sticky notes</div>
+            <div id="board" class="note-board"></div>
+          </div>
+        `
+      ),
+      // 7 — result
+      spread(
+        `
+          <div class="pad">
+            <div class="h-title">quiz result</div>
+            <div id="quizResult" class="result" style="margin-top:8px">isi dulu semua pertanyaan ya, ade 💗</div>
+            <div class="small" style="margin-top:10px">kategori lucu/romantis: <strong>The Perfect Match</strong>, <strong>Forever Sweetheart</strong>, <strong>Adventure Duo</strong>, <strong>Timeless Lovers</strong>.</div>
+          </div>
+        `,
+        `
+          <div class="pad">
+            <div class="card">
+              <p>terima kasih sudah membaca sampai akhir. klik 💗 di bawah untuk love confetti.</p>
+            </div>
+          </div>
+        `
+      )
+    ];
 
-    /* =========================================================
-       Music (optional) using WebAudio – soft sine pad loop
-       ========================================================= */
-    (function(){
-      let ctx=null, g=null, playing=false, timer=null, oscs=[];
-      const chords = [
-        [261.63, 329.63, 392.00], // C
-        [293.66, 370.00, 440.00], // Dm
-        [329.63, 415.30, 493.88], // Em
-        [261.63, 349.23, 440.00]  // F/A
-      ];
-      function play(){
-        if(playing) return;
-        ctx = ctx || new (window.AudioContext||window.webkitAudioContext)();
-        g = ctx.createGain(); g.gain.value = 0.0; g.connect(ctx.destination);
-        let i=0;
-        function step(){
-          // stop old
-          oscs.forEach(o=>{ try{o.stop()}catch{} o.disconnect() }); oscs=[];
-          const now = ctx.currentTime;
-          g.gain.cancelScheduledValues(now);
-          g.gain.setTargetAtTime(0.035, now, .6); // lembut
-          chords[i].forEach(f=>{
-            const o = ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
-            const gn = ctx.createGain(); gn.gain.value = 0.4; o.connect(gn).connect(g);
-            o.start();
-            oscs.push(o);
-          });
-          i = (i+1) % chords.length;
-          timer = setTimeout(step, 6000);
+    function renderSpread(i){
+      $('#spread').innerHTML = spreads[i-1];
+      attachQuestionHandlers();
+      if(i===7) computeResult();
+    }
+
+    function openCover(){
+      // page-turn animation on open
+      const flip = document.createElement('div');
+      flip.className='flip';
+      $('#book').appendChild(flip);
+      flip.style.animation='flipNext .9s ease forwards';
+      setTimeout(()=>{ $('#cover').style.display='none'; index=1; renderSpread(index); updateArrows(); }, 450);
+      setTimeout(()=>flip.remove(), 910);
+    }
+
+    function next(){
+      if(index===0){ openCover(); return; }
+      if(index>=spreads.length) return;
+      const flip = document.createElement('div'); flip.className='flip'; $('#book').appendChild(flip);
+      flip.style.animation='flipNext .8s ease forwards';
+      setTimeout(()=>{ index++; renderSpread(index); updateArrows(); }, 400);
+      setTimeout(()=>flip.remove(), 820);
+    }
+
+    function prev(){
+      if(index<=1){ // show cover again
+        const flip = document.createElement('div'); flip.className='flip left'; $('#book').appendChild(flip);
+        flip.style.animation='flipPrev .8s ease forwards';
+        setTimeout(()=>{ index=0; $('#spread').innerHTML=''; $('#cover').style.display='grid'; updateArrows(); }, 400);
+        setTimeout(()=>flip.remove(), 820);
+        return;
+      }
+      const flip = document.createElement('div'); flip.className='flip left'; $('#book').appendChild(flip);
+      flip.style.animation='flipPrev .8s ease forwards';
+      setTimeout(()=>{ index--; renderSpread(index); updateArrows(); }, 400);
+      setTimeout(()=>flip.remove(), 820);
+    }
+
+    function updateArrows(){
+      $('#prev').disabled = (index===0);
+      $('#next').disabled = (index===spreads.length);
+    }
+
+    // quiz answers capture (persist across spreads)
+    function attachQuestionHandlers(){
+      $$('#spread .q-box').forEach(box=>{
+        const no = box.dataset.q;
+        const name = 'q'+no;
+        if(answers[name]){
+          const el = box.querySelector(`input[name="${name}"][value="${answers[name]}"]`);
+          if(el) el.checked = true;
         }
-        step(); playing = true; $('#musicBtn').textContent='🎵 music: on';
-      }
-      function stop(){
-        if(!playing) return;
-        const now = ctx.currentTime;
-        g.gain.setTargetAtTime(0, now, .3);
-        setTimeout(()=>{ oscs.forEach(o=>{ try{o.stop()}catch{} }); oscs=[] }, 400);
-        clearTimeout(timer); playing=false; $('#musicBtn').textContent='🎵 music: off';
-      }
-      $('#musicBtn').addEventListener('click', ()=> playing ? stop() : play());
-      // resume after user interaction on mobile
-      document.addEventListener('click', ()=>{ if(ctx && ctx.state==='suspended') ctx.resume() }, {once:true});
-    })();
+        box.addEventListener('change', e=>{
+          if(e.target && e.target.name===name){ answers[name] = e.target.value; }
+        })
+      })
 
-    /* =========================================================
-       Heart confetti (easter egg)
-       ========================================================= */
-    (function(){
-      const layer = $('#confetti');
-      function burst(){
-        for(let i=0;i<36;i++){
-          const h = document.createElement('div');
-          h.className='heart';
-          h.style.left = rand(10,90)+'vw';
-          h.style.top = '-30px';
-          h.style.background = `hsl(${rand(340,360)}, 80%, ${rand(52,65)}%)`;
-          const d = rand(1.8, 3.2);
-          h.style.animationDuration = d+'s';
-          layer.appendChild(h);
-          setTimeout(()=>h.remove(), d*1000+200);
-        }
+      // message page handlers
+      const msg = $('#msg');
+      if(msg){
+        $('#post').onclick = ()=>{
+          let t = msg.value.trim(); if(!t) return;
+          t = t.replace(/\b(kamu)\b/gi,'ade').replace(/\b(aku)\b/gi,'mas');
+          addNote(t); msg.value='';
+        };
+        $('#clear').onclick = ()=>{ if(confirm('hapus semua sticky notes?')){ localStorage.removeItem('scrap_notes_v2'); renderNotes(); } };
+        renderNotes();
       }
-      $('#heartBtn').addEventListener('click', burst);
-    })();
+    }
 
-    /* =========================================================
-       Make gallery captions popup with cute notes
-       ========================================================= */
-    (function(){
-      // On gallery click, also show a sweet caption in lightbox
-      $$('#gallery .polaroid').forEach(card=>{
-        card.addEventListener('click', ()=>{
-          const cap = card.querySelector('.label')?.textContent || '';
-          $('#lbCap').innerHTML = `<strong style="color:#a14c5c">${cap}</strong> — momen favorit mas & ade ✨`;
-        });
-      });
-    })();
+    // result logic
+    function computeResult(){
+      const scores = {sweet:0, adventure:0, cozy:0, classic:0};
+      for(let i=1;i<=5;i++){
+        const v = answers['q'+i]; if(v) scores[v]++;
+      }
+      const result = $('#quizResult');
+      const filled = Object.keys(answers).length>=5;
+      if(!filled){ result.textContent='isi dulu semua pertanyaan ya, ade 💗'; return; }
+      const best = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+      const titles = { sweet:'The Perfect Match', adventure:'Adventure Duo', cozy:'Forever Sweetheart', classic:'Timeless Lovers' };
+      const blurbs = {
+        sweet:'mas & ade pasangan manis—perhatian kecil adalah bahasa cinta.',
+        adventure:'mas & ade partner petualangan. rencana spontan = energi bahagia.',
+        cozy:'mas & ade itu rumah. momen sederhana bikin hati pulang.',
+        classic:'mas & ade elegan & solid. tradisi + komitmen bikin cerita panjang.'
+      };
+      result.innerHTML = `<div style="width:54px;height:54px;border-radius:14px;background:var(--pink-soft);display:grid;place-content:center;font-size:24px">💞</div>
+        <div><div style="font-weight:800;color:#a14c5c">${titles[best]}</div><div>${blurbs[best]}</div></div>`;
+    }
+
+    // sticky notes persistence
+    const KEY='scrap_notes_v2';
+    function loadNotes(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []} }
+    function saveNotes(arr){ localStorage.setItem(KEY, JSON.stringify(arr)) }
+    function renderNotes(){
+      const board = $('#board'); if(!board) return;
+      board.innerHTML=''; const arr = loadNotes();
+      arr.forEach((n,idx)=>{
+        const d = document.createElement('div'); d.className='note'; d.style.transform=`rotate(${n.rot||0}deg)`; d.innerHTML=`<div class="pin"></div><div class="x">×</div>${escapeHtml(n.text)}`;
+        d.querySelector('.x').onclick=()=>{ const a=loadNotes(); a.splice(idx,1); saveNotes(a); renderNotes(); };
+        board.appendChild(d);
+      })
+    }
+    function addNote(text){ const arr=loadNotes(); arr.push({text, rot:Math.round(rand(-3,3))}); saveNotes(arr); renderNotes(); }
+    function escapeHtml(str){ const t=document.createElement('div'); t.textContent=str; return t.innerHTML }
+
+    // heart confetti (easter egg)
+    (function(){ const layer=$('#confetti'); $('#heart').onclick=()=>{ for(let i=0;i<32;i++){ const h=document.createElement('div'); h.className='heart'; h.style.left=rand(10,90)+'vw'; h.style.top='-30px'; h.style.background=`hsl(${rand(340,360)}, 80%, ${rand(52,65)}%)`; const d=rand(1.8,3.2); h.style.animationDuration=d+'s'; layer.appendChild(h); setTimeout(()=>h.remove(), d*1000+200) } } })();
+
+    // wires
+    $('#openBtn').addEventListener('click', openCover);
+    $('#next').addEventListener('click', next);
+    $('#prev').addEventListener('click', prev);
+
+    // keyboard nav
+    document.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
   </script>
 </body>
 </html>
