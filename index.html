@@ -33,12 +33,18 @@
     /* book/page frame */
     .book{ display:grid; gap:var(--gap-lg); padding:clamp(14px,3vw,28px); }
     .page{
-      position:relative; margin:0 auto; width:min(92vw, 720px); aspect-ratio:3/4; background:var(--c-paper);
+      position:relative; margin:0 auto;
+      /* responsive size: fits width & height */
+      --w:min(88vw, 560px);
+      --h:min(78vh, 720px);
+      width:min(var(--w), calc(var(--h) * 0.75));
+      aspect-ratio:3/4;
+      background:var(--c-paper);
       border-radius:22px; box-shadow:0 10px 30px rgba(0,0,0,.08);
       border:1px solid rgba(0,0,0,.06); overflow:hidden;
       /* subtle paper texture */
-      background-image: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.92)),
-                        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 10 10'%3E%3Ccircle cx='1' cy='1' r='.02' fill='%23c8c8c8'/%3E%3C/svg%3E");
+      background-image: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.95)),
+                        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 10 10'%3E%3Ccircle cx='1' cy='1' r='.02' fill='%23d0d0d0'/%3E%3C/svg%3E");
       background-size: auto, 140px 140px;
     }
     .pad{ padding:clamp(16px,3.6vw,28px); height:100%; display:grid; place-items:center; text-align:center }
@@ -105,6 +111,19 @@
 
     /* reduced motion */
     @media (prefers-reduced-motion:reduce){ .btn, .choice, .heart{ animation:none !important; transition:none !important } .type{ border-right:0 } }
+      /* minimal hero opening */
+    .hero{ height:100%; display:grid; place-items:center; gap:8px; padding:clamp(14px,3vw,22px) }
+    .badge{ position:relative; width:min(56%, 260px); aspect-ratio:1; border-radius:50%;
+      background: radial-gradient(120% 120% at 30% 30%, #ffffff 0%, #ffe9f0 55%, #ffd3e2 100%);
+      box-shadow: 0 8px 24px rgba(255,107,129,.25), inset 0 0 0 6px rgba(255,255,255,.7);
+      display:grid; place-items:center; }
+    .badge::after{ content:'🎂'; font-size:clamp(44px,10vw,64px); }
+    .halo{ position:absolute; inset:-18%; border-radius:50%;
+      background: radial-gradient(circle, rgba(255,107,129,.22), rgba(255,107,129,0) 60%);
+      filter: blur(10px); pointer-events:none; }
+    .title{ font-size:clamp(20px,4vw,28px); font-weight:800; letter-spacing:.3px }
+    .subtle{ font-size:13px; opacity:.68 }
+
   </style>
 </head>
 <body>
@@ -197,13 +216,12 @@ makasih ya, ade. mari terus bareng, pelan tapi pasti, sampai jauh.`,
 
   function renderOpening(){
     return `
-      <div class="pad">
-        <div class="envelope" aria-hidden="true">
-          <div class="flap"></div>
-          <div class="body"></div>
-          <div class="seal" aria-hidden="true">💌</div>
-        </div>
-        <h2 class="muted">${APP_CONFIG.KALIMAT_PEMBUKA}</h2>
+      <div class="hero">
+        <div class="badge"><span class="halo" aria-hidden="true"></span></div>
+        <h1 class="title">selamat ulang tahun, ade</h1>
+        <p class="muted subtle">dari ${APP_CONFIG.NAMA_PENGIRIM}</p>
+      </div>`;
+  }</h2>
         <h1 id="headline" class="type" aria-label="pesan utama"></h1>
         <p class="muted">untuk ${APP_CONFIG.NAMA_PENERIMA} dari ${APP_CONFIG.NAMA_PENGIRIM}</p>
       </div>`;
@@ -278,7 +296,7 @@ makasih ya, ade. mari terus bareng, pelan tapi pasti, sampai jauh.`,
     wrap.classList.remove('fade'); void wrap.offsetWidth; wrap.classList.add('fade');
 
     // content by page index
-    if(current===1){ wrap.innerHTML = renderOpening(); setTimeout(()=>typewriter($('#headline'), APP_CONFIG.PESAN_UTAMA_SINGKAT), 60); }
+    if(current===1){ wrap.innerHTML = renderOpening(); }
     else if([2,3,4,11,12].includes(current)){ wrap.innerHTML = renderImagePage(APP_CONFIG.GAMBAR[current]); }
     else if(current>=5 && current<=9){ wrap.innerHTML = renderQuizPage(current); bindQuizHandlers(); }
     else if(current===10){ wrap.innerHTML = renderResult(); bindResultHandlers(); }
