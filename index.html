@@ -1,621 +1,608 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <title>buat ade</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="surat interaktif buat ade dari mas.">
-  <meta property="og:title" content="buat ade">
-  <meta property="og:description" content="surat interaktif buat ade dari mas.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/og.jpg">
-  <meta name="theme-color" content="#ff6b81">
-  <!-- inline favicon svg -->
-  <link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" rx="24" ry="24" fill="%23ff6b81"/><path d="M24 40h80v48c0 4.4-3.6 8-8 8H32c-4.4 0-8-3.6-8-8V40z" fill="%23fff5f7"/><path d="M24 40l40 28 40-28" fill="none" stroke="%23ff6b81" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
-  <style>
-    :root{
-      --c-accent:#ff6b81; --c-soft:#ffd3e2; --c-paper:#fff5f7; --c-text:#4d4d4d;
-      --radius:16px; --radius-xl:22px; --shadow:0 6px 20px rgba(0,0,0,.08);
-      --maxw:880px; --gap:16px; --gap-lg:24px; --speed:300ms;
-    }
-    @media(prefers-color-scheme:dark){
-      :root{ --c-paper:#1b1b1b; --c-text:#f0f0f0; --c-soft:#2a2224; }
-      body{ background:#121212; }
-    }
-    [data-theme="light"]{ color-scheme: light; }
-    [data-theme="dark"]{ color-scheme: dark; }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{
-      margin:0; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
-      color:var(--c-text); background:linear-gradient(180deg,var(--c-soft),#ffffff 40%,var(--c-paper));
-    }
-    .container{ max-width:var(--maxw); margin-inline:auto; padding:24px; }
-    .card{
-      background:var(--c-paper); border-radius:var(--radius-xl); box-shadow:var(--shadow);
-      padding:clamp(16px,3vw,28px); position:relative; overflow:hidden;
-    }
-    h1,h2,h3{ margin:0 0 8px 0 }
-    h1{ font-size:clamp(24px,5vw,36px); letter-spacing:.2px }
-    h2{ font-size:clamp(18px,3.5vw,24px); opacity:.95 }
-    p{ margin:0 0 12px 0 }
-    .row{ display:grid; gap:var(--gap) }
-    .grid-2{ display:grid; grid-template-columns:1fr; gap:var(--gap); }
-    @media(min-width:720px){ .grid-2{ grid-template-columns:1fr 1fr } }
-    .btn{
-      appearance:none; border:0; background:var(--c-accent); color:white; padding:12px 18px;
-      border-radius:999px; font-weight:600; cursor:pointer; transition:transform .08s ease, box-shadow .2s ease;
-      box-shadow:0 6px 16px rgba(255,107,129,.35); position:relative; overflow:hidden;
-    }
-    .btn:focus-visible{ outline:3px solid #0000; box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--c-accent) }
-    .btn:hover{ transform:translateY(-1px) }
-    .btn[disabled]{ opacity:.6; cursor:not-allowed; box-shadow:none }
-    .btn.ghost{ background:transparent; color:var(--c-accent); border:2px solid var(--c-accent); box-shadow:none }
-    .tag{ display:inline-block; padding:4px 10px; border-radius:999px; background:var(--c-soft); color:var(--c-text); font-size:12px }
-    .muted{ opacity:.7 }
-    .center{ text-align:center }
-    .hidden{ display:none !important }
-    .section{ margin-top:24px }
-    .toolbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
-    .switch{ display:inline-flex; align-items:center; gap:8px; font-size:14px }
-    .switch input{ width:44px; height:26px; appearance:none; background:#d6d6d6; border-radius:999px; position:relative; outline:none; cursor:pointer; transition:background var(--speed) }
-    .switch input:after{ content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:left var(--speed) }
-    .switch input:checked{ background:var(--c-accent) }
-    .switch input:checked:after{ left:21px }
-    /* cover / envelope */
-    .cover{ display:grid; place-items:center; min-height:72vh }
-    .envelope{
-      width:min(420px,86vw); aspect-ratio:4/3; position:relative; border-radius:16px; box-shadow:var(--shadow);
-      background:linear-gradient(180deg,#fff, var(--c-paper)); overflow:hidden;
-    }
-    .envelope .flap{
-      position:absolute; inset:auto 0 50% 0; height:60%; background:
-      linear-gradient(135deg,transparent 49.5%, var(--c-soft) 50%) left,
-      linear-gradient(-135deg,transparent 49.5%, var(--c-soft) 50%) right;
-      background-size:50% 100%; background-repeat:no-repeat;
-    }
-    .envelope .body{
-      position:absolute; inset:30% 0 0 0; background:var(--c-soft);
-    }
-    .seal{
-      position:absolute; top:45%; left:50%; transform:translate(-50%,-50%);
-      background:var(--c-accent); color:#fff; width:72px; height:72px; border-radius:50%;
-      display:grid; place-items:center; box-shadow:0 6px 14px rgba(255,107,129,.5);
-      font-size:28px;
-    }
-    .open-cta{ margin-top:16px }
-    /* hearts */
-    .heart{ position:fixed; pointer-events:none; font-size:20px; animation:floatUp 1.2s ease-out forwards }
-    @keyframes floatUp{ to{ transform:translateY(-120px); opacity:0 } }
-    /* typewriter */
-    .type{ border-right:2px solid var(--c-accent); white-space:nowrap; overflow:hidden }
-    /* countdown */
-    .timer{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center }
-    .box{ min-width:72px; background:var(--c-paper); border:1px solid rgba(0,0,0,.06); border-radius:12px; padding:10px; text-align:center }
-    .box b{ font-size:20px; display:block }
-    /* progress */
-    .progress{ height:10px; background:rgba(0,0,0,.08); border-radius:999px; overflow:hidden }
-    .progress>i{ display:block; height:100%; width:0%; background:var(--c-accent) }
-    /* quiz */
-    .choices{ display:grid; gap:10px; margin-top:10px }
-    .choice{ padding:10px 14px; border:1px solid rgba(0,0,0,.1); border-radius:12px; cursor:pointer; background:#fff0; }
-    .choice:focus-visible{ outline:3px solid #0000; box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--c-accent) }
-    .choice.correct{ border-color:rgba(0,180,0,.6) }
-    .choice.wrong{ border-color:rgba(255,0,0,.5) }
-    /* letter */
-    .letter{ background:var(--c-paper); border-radius:16px; padding:18px; border:1px dashed rgba(0,0,0,.12) }
-    .letter p{ margin:0 0 10px 0 }
-    .letter-actions{ display:flex; gap:10px; flex-wrap:wrap }
-    /* gallery */
-    .gallery{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
-    .gallery figure{ margin:0; border-radius:14px; overflow:hidden; background:#ddd; position:relative }
-    .gallery img{ width:100%; height:100%; object-fit:cover; display:block; aspect-ratio:4/3 }
-    .ph{ display:grid; place-items:center; color:#666; font-size:14px; padding:24px }
-    .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; align-items:center; justify-content:center; z-index:1000 }
-    .lightbox.open{ display:flex }
-    .lightbox img{ max-width:90vw; max-height:80vh; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,.5) }
-    .lightbox .close{ position:fixed; top:20px; right:20px; }
-    /* confetti */
-    .confetti{ position:fixed; top:0; left:0; width:100vw; height:0; overflow:visible; pointer-events:none; }
-    .confetti i{ position:absolute; width:8px; height:14px; opacity:.9; border-radius:2px; animation:fall linear forwards }
-    @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.95 } }
-    /* footer */
-    footer{ text-align:center; font-size:12px; opacity:.7; padding:18px 0 40px }
-    /* reduced motion */
-    @media (prefers-reduced-motion:reduce){
-      .btn, .choice, .heart, .confetti i{ animation:none !important; transition:none !important }
-      .type{ border-right:0 }
-    }
-  </style>
+<meta charset="utf-8">
+<title>buat ade — deluxe</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="surat interaktif super lengkap buat ade dari mas.">
+<meta property="og:title" content="buat ade — deluxe">
+<meta property="og:description" content="surat interaktif super lengkap buat ade dari mas.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/og.jpg">
+<meta name="theme-color" content="#ff6b81">
+<link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="100%" height="100%" rx="24" ry="24" fill="%23ff6b81"/><path d="M24 40h80v48c0 4.4-3.6 8-8 8H32c-4.4 0-8-3.6-8-8V40z" fill="%23fff5f7"/><path d="M24 40l40 28 40-28" fill="none" stroke="%23ff6b81" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
+<style>
+:root{
+  --c-accent:#ff6b81; --c-soft:#ffd3e2; --c-paper:#fff5f7; --c-text:#4d4d4d;
+  --shadow:0 6px 22px rgba(0,0,0,.10); --radius:16px; --radius-xl:22px; --gap:16px;
+  --maxw:980px;
+}
+@media(prefers-color-scheme:dark){
+  :root{ --c-paper:#181818; --c-text:#f2f2f2; --c-soft:#2a2224 }
+  body{ background:#121212 }
+}
+[data-theme="dark"]{ color-scheme:dark }
+[data-theme="light"]{ color-scheme:light }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
+  color:var(--c-text);
+  background:linear-gradient(180deg,var(--c-soft),#ffffff 40%,var(--c-paper));
+}
+.container{max-width:var(--maxw);margin:0 auto;padding:24px}
+.card{background:var(--c-paper);border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:clamp(16px,3vw,28px)}
+h1,h2,h3{margin:0 0 8px 0}
+h1{font-size:clamp(24px,5vw,38px)}
+h2{font-size:clamp(18px,3.5vw,24px);opacity:.95}
+p{margin:0 0 12px 0}
+.muted{opacity:.75}
+.center{text-align:center}
+.hidden{display:none !important}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--c-soft);font-size:12px}
+.btn{
+  appearance:none;border:0;background:var(--c-accent);color:#fff;padding:12px 18px;border-radius:999px;font-weight:600;
+  box-shadow:0 6px 16px rgba(255,107,129,.35);cursor:pointer;transition:transform .08s ease, box-shadow .2s;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid #0000;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--c-accent)}
+.btn.ghost{background:transparent;color:var(--c-accent);border:2px solid var(--c-accent);box-shadow:none}
+.btn[disabled]{opacity:.6;cursor:not-allowed}
+.section{margin-top:22px}
+.grid-2{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+@media(min-width:760px){.grid-2{grid-template-columns:1fr 1fr}}
+/* cover */
+.cover{min-height:72vh;display:grid;place-items:center}
+.envelope{width:min(460px,90vw);aspect-ratio:4/3;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(180deg,#fff,var(--c-paper))}
+.envelope .flap{position:absolute;inset:auto 0 52% 0;height:60%;background:
+ linear-gradient(135deg,transparent 49.5%, var(--c-soft) 50%) left,
+ linear-gradient(-135deg,transparent 49.5%, var(--c-soft) 50%) right;
+ background-size:50% 100%; background-repeat:no-repeat}
+.envelope .body{position:absolute;inset:30% 0 0 0;background:var(--c-soft)}
+.seal{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);background:var(--c-accent);color:#fff;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-size:28px;box-shadow:0 6px 14px rgba(255,107,129,.5)}
+/* typewriter */
+.type{border-right:2px solid var(--c-accent);white-space:nowrap;overflow:hidden}
+/* countdown boxes */
+.timer{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.box{min-width:72px;background:var(--c-paper);border:1px solid rgba(0,0,0,.06);border-radius:12px;padding:10px;text-align:center}
+.box b{font-size:20px;display:block}
+/* ring */
+.ring{display:grid;place-items:center}
+.ring svg{width:160px;height:160px}
+.ring .num{position:absolute;font-weight:700;font-size:24px}
+/* quiz */
+.progress{height:10px;background:rgba(0,0,0,.08);border-radius:999px;overflow:hidden}
+.progress>i{display:block;height:100%;width:0%;background:var(--c-accent)}
+.choices{display:grid;gap:10px;margin-top:10px}
+.choice{padding:10px 14px;border:1px solid rgba(0,0,0,.12);border-radius:12px;background:#fff0;cursor:pointer}
+.choice.correct{border-color:rgba(0,180,0,.6)}
+.choice.wrong{border-color:rgba(255,0,0,.5)}
+/* letter */
+.letter{background:var(--c-paper);border-radius:16px;padding:18px;border:1px dashed rgba(0,0,0,.12)}
+.letter-actions{display:flex;gap:10px;flex-wrap:wrap}
+/* gallery polaroid */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+@media(min-width:760px){.gallery{grid-template-columns:1fr 1fr 1fr}}
+.polaroid{position:relative;background:#fff;border-radius:12px;padding:8px;box-shadow:0 10px 22px rgba(0,0,0,.18);transform:rotate(var(--rot,0deg));user-select:none}
+.polaroid img{width:100%;height:auto;border-radius:8px;display:block;aspect-ratio:4/3;object-fit:cover}
+.polaroid figcaption{text-align:center;font-size:12px;color:#444;margin-top:6px}
+.draggable{position:relative}
+.draggable.dragging{opacity:.9;cursor:grabbing}
+/* timeline */
+.timeline{display:grid;grid-auto-flow:column;grid-auto-columns:85%;gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+@media(min-width:760px){.timeline{grid-auto-columns:45%}}
+.titem{scroll-snap-align:center;background:var(--c-paper);border-radius:16px;box-shadow:var(--shadow);padding:14px}
+.titem img{width:100%;height:auto;border-radius:12px;object-fit:cover;aspect-ratio:16/9}
+/* wish board */
+.board{position:relative;min-height:320px;border:2px dashed rgba(0,0,0,.12);border-radius:16px;background:
+ radial-gradient(800px 200px at 50% 120%, rgba(255,107,129,.08), transparent 60%),
+ linear-gradient(180deg,#fff0,var(--c-paper));overflow:hidden}
+.heartNote{position:absolute;background:#fff;color:#333;border-radius:18px;padding:8px 10px;font-size:12px;box-shadow:0 10px 22px rgba(0,0,0,.15);border:1px solid rgba(0,0,0,.06);max-width:160px}
+.heartNote:before{content:"❤";position:absolute;left:-10px;top:-10px;font-size:18px;color:var(--c-accent)}
+/* fireworks canvas */
+#fw{position:fixed;inset:0;pointer-events:none;z-index:1000}
+/* parallax tilt */
+.tilt{transform-style:preserve-3d;transition:transform .15s}
+.tilt:hover{transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+footer{text-align:center;font-size:12px;opacity:.7;padding:18px 0 40px}
+@media (prefers-reduced-motion:reduce){
+  .btn,.choice{transition:none !important}
+  .type{border-right:0}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header class="toolbar" aria-label="toolbar">
-      <span class="tag" id="whoTag" aria-live="polite"></span>
-      <label class="switch" title="tema">
-        <input id="themeToggle" type="checkbox" aria-label="toggle tema gelap/terang">
-        <span id="themeLabel">tema gelap</span>
-      </label>
-      <button class="btn ghost" id="shareBtn" aria-label="bagikan via whatsapp">bagikan</button>
-      <button class="btn ghost" id="musicBtn" aria-label="putar musik" disabled>putar musik</button>
-    </header>
+<canvas id="fw"></canvas>
+<div class="container">
+  <header class="toolbar" aria-label="toolbar">
+    <span class="tag" id="whoTag" aria-live="polite"></span>
+    <button class="btn ghost" id="shareBtn" aria-label="bagikan via whatsapp">bagikan</button>
+    <button class="btn ghost" id="musicBtn" aria-label="putar musik" disabled>putar musik</button>
+    <label style="margin-left:auto" class="tag">tema</label>
+    <label class="switch">
+      <input id="themeToggle" type="checkbox" aria-label="toggle tema">
+    </label>
+  </header>
 
-    <!-- Cover / Envelope -->
-    <section id="cover" class="cover" aria-label="halaman pembuka">
-      <div class="card center">
-        <div class="envelope" aria-hidden="true">
-          <div class="flap"></div>
-          <div class="body"></div>
-          <div class="seal" aria-hidden="true">💌</div>
+  <!-- COVER -->
+  <section id="cover" class="cover">
+    <div class="card center tilt" id="coverCard">
+      <div class="envelope" aria-hidden="true">
+        <div class="flap"></div><div class="body"></div><div class="seal">💌</div>
+      </div>
+      <h2 id="openingLine" class="muted" style="margin-top:12px"></h2>
+      <button class="btn" id="openBtn" aria-label="buka kartu">buka</button>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <main id="app" class="hidden" aria-live="polite">
+    <!-- HERO -->
+    <section class="card section center tilt" id="hero">
+      <h2 id="subHeadline" class="muted"></h2>
+      <h1 id="headline" class="type" aria-label="pesan utama"></h1>
+      <p id="heroSub" class="muted"></p>
+    </section>
+
+    <!-- COUNTDOWN + RING -->
+    <section class="card section">
+      <div class="grid-2">
+        <div class="center">
+          <h2 id="countdownTitle">menuju hari spesial</h2>
+          <div class="timer" id="timer" aria-live="polite">
+            <div class="box"><b id="d">0</b>hari</div>
+            <div class="box"><b id="h">0</b>jam</div>
+            <div class="box"><b id="m">0</b>menit</div>
+            <div class="box"><b id="s">0</b>detik</div>
+          </div>
+          <p id="countdownNote" class="muted" style="margin-top:6px"></p>
         </div>
-        <h2 id="openingLine" class="muted" style="margin-top:14px"></h2>
-        <div class="open-cta">
-          <button class="btn" id="openBtn" aria-label="buka kartunya">buka</button>
+        <div class="ring center" style="position:relative">
+          <div class="num" id="ringNum">0%</div>
+          <svg viewBox="0 0 120 120" aria-label="progress menuju hari H">
+            <defs>
+              <linearGradient id="g"><stop offset="0" stop-color="var(--c-accent)"/><stop offset="1" stop-color="#ffa3b1"/></linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="52" stroke="rgba(0,0,0,.08)" stroke-width="10" fill="none"/>
+            <circle id="ring" cx="60" cy="60" r="52" stroke="url(#g)" stroke-width="10" fill="none"
+               stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="327" stroke-dashoffset="327"/>
+            <text x="60" y="65" text-anchor="middle" font-size="12" fill="currentColor">menuju hari H</text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- Hero -->
-    <main id="app" class="hidden" aria-live="polite">
-      <section class="card section center" aria-label="sapaan">
-        <h2 id="subHeadline" class="muted"></h2>
-        <h1 id="headline" class="type" aria-label="pesan utama"></h1>
-        <div class="row center muted" id="heroSub"></div>
-      </section>
+    <!-- QUIZ -->
+    <section class="card section" aria-label="kuis kecil">
+      <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+      <h2 id="quizQ" style="margin-top:10px"></h2>
+      <div id="choices" class="choices" role="listbox"></div>
+      <p id="clue" class="muted" aria-live="assertive"></p>
+      <div class="toolbar" style="margin-top:8px">
+        <button class="btn ghost" id="nextBtn">lanjut</button>
+        <span id="scoreTag" class="muted"></span>
+        <button class="btn" id="unlockBtn" disabled>baca surat</button>
+      </div>
+    </section>
 
-      <!-- Countdown -->
-      <section class="card section center" aria-label="hitung mundur">
-        <h2 id="countdownTitle">menuju hari spesial</h2>
-        <div class="timer" id="timer" aria-live="polite">
-          <div class="box"><b id="d">0</b>hari</div>
-          <div class="box"><b id="h">0</b>jam</div>
-          <div class="box"><b id="m">0</b>menit</div>
-          <div class="box"><b id="s">0</b>detik</div>
-        </div>
-        <p class="muted" id="countdownNote" style="margin-top:8px"></p>
-      </section>
+    <!-- LETTER -->
+    <section id="letterSec" class="card section hidden">
+      <h2>untuk <span id="toName"></span> ❤️</h2>
+      <div id="letter" class="letter" tabindex="0"></div>
+      <div class="letter-actions" style="margin-top:10px">
+        <button class="btn" id="copyBtn">copy</button>
+        <button class="btn ghost" id="downloadBtn">download .txt</button>
+      </div>
+    </section>
 
-      <!-- Quiz -->
-      <section class="card section" aria-label="kuis kecil">
-        <div class="progress" aria-hidden="true"><i id="prog"></i></div>
-        <h2 id="quizQ" style="margin-top:10px"></h2>
-        <div id="choices" class="choices" role="listbox" aria-label="pilihan jawaban"></div>
-        <p id="clue" class="muted" aria-live="assertive"></p>
-        <div class="toolbar" style="margin-top:10px">
-          <button class="btn ghost" id="nextBtn" aria-label="lanjut pertanyaan">lanjut</button>
-          <span class="muted" id="scoreTag"></span>
-          <button class="btn" id="unlockBtn" aria-label="baca surat" disabled>baca surat</button>
-        </div>
-      </section>
+    <!-- TIMELINE -->
+    <section class="card section" aria-label="timeline">
+      <div class="toolbar">
+        <h2 style="margin-right:auto">timeline kita</h2>
+        <span class="muted">geser ke samping</span>
+      </div>
+      <div id="timeline" class="timeline"></div>
+    </section>
 
-      <!-- Letter -->
-      <section id="letterSec" class="card section hidden" aria-label="surat">
-        <h2>untuk <span id="toName"></span> ❤️</h2>
-        <div id="letter" class="letter" tabindex="0" aria-label="isi surat"></div>
-        <div class="letter-actions" style="margin-top:10px">
-          <button class="btn" id="copyBtn" aria-label="salin surat">copy</button>
-          <button class="btn ghost" id="downloadBtn" aria-label="download surat">download .txt</button>
-        </div>
-      </section>
+    <!-- GALLERY POLAROID -->
+    <section class="card section" aria-label="galeri">
+      <div class="toolbar">
+        <h2 style="margin-right:auto">galeri polaroid</h2>
+        <button class="btn ghost" id="scatterBtn" title="acak & seret foto">scatter & drag</button>
+        <button class="btn ghost" id="resetScatter">rapikan</button>
+      </div>
+      <div id="gallery" class="gallery"></div>
+    </section>
 
-      <!-- Gallery -->
-      <section class="card section" aria-label="galeri">
-        <div class="toolbar">
-          <h2 style="margin-right:auto">galeri memori</h2>
-          <button class="btn ghost" id="openGal" aria-label="lihat galeri">lihat galeri</button>
-        </div>
-        <div id="gallery" class="gallery" aria-label="kumpulan foto"></div>
-      </section>
+    <!-- WISH TREE -->
+    <section class="card section" aria-label="pohon harapan">
+      <h2>pohon harapan</h2>
+      <p class="muted">tulis pesan singkat, jadi hati kecil di papan ini (tersimpan di perangkatmu).</p>
+      <div class="toolbar" style="margin:8px 0">
+        <input id="wishInput" aria-label="tulis harapan" placeholder="ketik pesan manis..." style="flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,.15);background:transparent;color:inherit">
+        <button class="btn" id="addWish">tambahkan</button>
+        <button class="btn ghost" id="clearWish">bersihkan</button>
+      </div>
+      <div id="board" class="board" aria-live="polite"></div>
+    </section>
 
-      <footer class="muted">dibuat dengan <span id="emoji">💖</span> oleh <span id="fromName"></span></footer>
-    </main>
-  </div>
+    <!-- VOICE NOTE -->
+    <section class="card section" aria-label="pesan suara">
+      <h2>pesan suara</h2>
+      <p class="muted">rekam ucapanmu (lokal/offline), lalu download & kirim ke ade.</p>
+      <div class="toolbar">
+        <button class="btn" id="recBtn">mulai rekam</button>
+        <button class="btn ghost" id="stopBtn" disabled>berhenti</button>
+        <audio id="playback" controls style="width:100%"></audio>
+        <a id="saveAudio" class="btn ghost" download="voice-untuk-aina.webm" style="display:none">download suara</a>
+      </div>
+    </section>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="pratinjau gambar">
-    <button class="btn ghost close" aria-label="tutup galeri" id="lbClose">tutup ✕</button>
-    <img id="lbImg" alt="gambar galeri">
-  </div>
+    <footer class="muted center">dibuat dengan <span id="emoji">💖</span> oleh <span id="fromName"></span></footer>
+  </main>
+</div>
 
-  <!-- Confetti layer -->
-  <div id="confetti" class="confetti" aria-hidden="true"></div>
+<!-- Lightbox reused from base (minimal) -->
+<div id="lightbox" class="hidden" role="dialog" aria-modal="true" aria-label="pratinjau gambar" style="position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:900">
+  <button class="btn ghost" id="lbClose" style="position:absolute;top:20px;right:20px">tutup ✕</button>
+  <img id="lbImg" alt="gambar galeri" style="max-width:90vw;max-height:80vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.5)">
+</div>
 
-  <audio id="bgm" preload="none"></audio>
+<audio id="bgm" preload="none"></audio>
 
-  <script>
-  // =======================
-  // APP CONFIG (editable)
-  // =======================
-  window.APP_CONFIG = {
-    NAMA_PENERIMA: "Aina Septitsany Athiya Ramadhani",
-    NAMA_PENGIRIM: "mas aren",
-    TANGGAL_SPESIAL_ISO: "2025-09-02T00:00:00+07:00",
-    PALETA_WARNA: ["#ff6b81","#ffd3e2","#fff5f7","#4d4d4d"],
-    FONT_STACK: "system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif",
-    KALIMAT_PEMBUKA: "hai ade, ada sesuatu buat kamu 💌",
-    PESAN_UTAMA_SINGKAT: "makasih sudah jadi rumah ter-nyaman buat aku.",
-    SURAT_PANJANG:
+<script>
+/* =======================
+   APP CONFIG (editable)
+   ======================= */
+window.APP_CONFIG = {
+  NAMA_PENERIMA: "Aina Septitsany Athiya Ramadhani",
+  NAMA_PENGIRIM: "mas aren",
+  TANGGAL_SPESIAL_ISO: "2025-09-02T00:00:00+07:00",
+  PALETA_WARNA: ["#ff6b81","#ffd3e2","#fff5f7","#4d4d4d"],
+  FONT_STACK: "system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif",
+  KALIMAT_PEMBUKA: "hai ade, ada sesuatu buat kamu 💌",
+  PESAN_UTAMA_SINGKAT: "makasih sudah jadi rumah ter-nyaman buat aku.",
+  SURAT_PANJANG:
 `ade,
-terima kasih sudah jadi tempat pulang paling tenang buat aku. di sela ributnya hari, kamu itu jeda yang bikin kepala pelan lagi.
+hari ini aku nggak cuma ngucap “selamat ya”, tapi juga nunjukin sedikit dunia yang lagi kita bangun bareng—tempat tiap detik kecil bisa jadi momen.
 
-aku suka caramu merawat hal kecil: nanya udah makan apa belum, ngingetin minum, atau sekadar kirim stiker receh yang bikin senyum muncul tanpa disuruh. hal-hal begini kelihatannya sepele, tapi justru yang bikin hari terasa utuh.
+kamu itu jeda yang bikin hari-hari aku balik bernapas. kalau dunia rame, kamu nada yang bikin tenang. makasih udah mau jadi rumah yang ditinggali sabar dan tawa kecil.
 
-kalau nanti capek datang, ingat ya: kita tim. kamu istirahat, aku jaga. kamu jatuh, aku tangkap. nggak selalu harus kuat, cukup jujur kalau butuh dipeluk.
+kalau badan kurang enak, kepalamu berat, atau hati kamu penuh… kasih tahu aku. kita tim: kamu istirahat, aku jagain pintunya. kamu cerita, aku dengerin sampai selesai.
 
-aku pengin kita lama, tapi juga hangat di setiap pendeknya hari. bukan yang besar-besar terus, tapi konsisten: sarapan bareng yang sederhana, jalan sore, nyoret rencana, ngobrol jujur sampai ngantuk.
+aku nggak janji yang besar-besar. aku janji hal kecil tapi konsisten: kabarin kalau pulang, pegang tangan waktu nyebrang, nyiapin minum favoritmu, dan ngulangin ‘hati-hati’ sampai kamu bosen.
 
-terima kasih sudah percaya. aku pun berusaha pantas setiap hari—belajar sabar, lebih ringan, dan lebih peka. kalau aku kurang-kurang, tegur aja. aku mau bertumbuh bareng kamu, bukan cuma jalan bareng.
+semoga langkah kamu ringan, rezeki kamu lancar, dan orang-orang baik selalu di sekelilingmu. semoga kamu selalu merasa dilihat—nggak cuma cantik, tapi juga kuat, cerdas, dan hangat.
 
-di tanggal spesialmu nanti, semoga semua doa baik mampir: badan sehat, hati lapang, rezeki lancar, lingkungan baik. dan semoga kamu selalu merasa dicintai, dilihat, dan dihargai—bukan cuma di momen ini, tapi setiap hari.
+buat aku, kamu itu kalimat yang pengen aku baca ulang tiap malam. dan kalau suatu waktu kamu lupa seberapa berartinya kamu, buka halaman ini—biar kamu ingat: kamu dicintai, dengan cara yang sederhana tapi serius.
 
-singkatnya: kamu rumah yang kubangun dari sabar, syukur, dan janji-janji kecil yang ditepati. makasih ya, ade. mari terus bareng, pelan tapi pasti, sampai jauh.`,
-    PERTANYAAN_KUIS: [
-      {"q":"pertama kali kita ketemu di mana?","a":["kampus","kfc","halte"],"correct":1},
-      {"q":"minuman favorit kamu?","a":["matcha","kopi susu","thai tea"],"correct":0},
-      {"q":"kucing idaman kita?","a":["scottish fold","anggora","british shorthair"],"correct":2}
-    ],
-    GALERI_GAMBAR: ["assets/foto1.jpg","assets/foto2.jpg","assets/foto3.jpg"],
-    MUSIK_LATAR: "assets/love.mp3",
-    CTA_WHATSAPP: "https://wa.me/?text=",
-    FALLBACK_EMOJI: "💖",
-    LOKALE: "id-ID",
-    SEO_TITLE: "buat ade",
-    SEO_DESC: "surat interaktif buat ade dari mas.",
-    OG_IMAGE: "assets/og.jpg",
-    TEXTS: {
-      buka:"buka", lanjut:"lanjut", lihatGaleri:"lihat galeri", bacaSurat:"baca surat",
-      putarMusik:"putar musik", jedaMusik:"jeda musik", bagikan:"bagikan",
-      menuju:"menuju hari spesial", hariIni:"hari spesialnya hari ini! 🎉",
-      syarat:"jawab minimal 2 benar untuk buka surat",
-      benar:"benar ✅", salah:"hmm belum tepat, coba ingat-ingat lagi 😉",
-      salin:"copy", unduh:"download .txt",
-      placeholderGaleri:"tambahin foto di folder assets/"
-    }
-  };
+selamat merayakan kamu, aina. mari jalan jauh, pelan, tapi nggak pernah berhenti.`,
+  PERTANYAAN_KUIS: [
+    {"q":"pertama kali kita ketemu di mana?","a":["kampus","kfc","halte"],"correct":1},
+    {"q":"minuman favorit kamu?","a":["matcha","kopi susu","thai tea"],"correct":0},
+    {"q":"kucing idaman kita?","a":["scottish fold","anggora","british shorthair"],"correct":2}
+  ],
+  GALERI_GAMBAR: ["assets/foto1.jpg","assets/foto2.jpg","assets/foto3.jpg"],
+  MUSIK_LATAR: "assets/love.mp3",
+  CTA_WHATSAPP: "https://wa.me/?text=",
+  FALLBACK_EMOJI: "💖",
+  LOKALE: "id-ID",
+  SEO_TITLE: "buat ade — deluxe",
+  SEO_DESC: "surat interaktif super lengkap buat ade dari mas.",
+  OG_IMAGE: "assets/og.jpg",
+  TIMELINE: [
+    {date:"2024-10-12", title:"awal ngobrol lama", img:"assets/foto1.jpg", note:"malam yang nyambungnya kebangetan"},
+    {date:"2025-01-02", title:"first mini date", img:"assets/foto2.jpg", note:"teh hangat + cerita receh"},
+    {date:"2025-03-14", title:"jalanan hujan", img:"assets/foto3.jpg", note:"payung kecil, tawa gede"},
+    {date:"2025-05-01", title:"rencana kecil", img:"assets/foto1.jpg", note:"pengen liburan tipis-tipis"},
+    {date:"2025-09-02", title:"harimu", img:"assets/foto2.jpg", note:"selamat ya, sayang"}
+  ]
+};
 
-  // apply palette & font
-  (function applyThemeFromConfig(){
-    const pal = APP_CONFIG.PALETA_WARNA||[];
-    const root = document.documentElement;
-    if(pal[0]) root.style.setProperty('--c-accent',pal[0]);
-    if(pal[1]) root.style.setProperty('--c-soft',pal[1]);
-    if(pal[2]) root.style.setProperty('--c-paper',pal[2]);
-    if(pal[3]) root.style.setProperty('--c-text',pal[3]);
-    document.body.style.fontFamily = APP_CONFIG.FONT_STACK;
-    document.title = APP_CONFIG.SEO_TITLE || document.title;
-    document.querySelector('meta[name="description"]').setAttribute('content', APP_CONFIG.SEO_DESC||"");
-    document.querySelector('meta[property="og:title"]').setAttribute('content', APP_CONFIG.SEO_TITLE||"");
-    document.querySelector('meta[property="og:description"]').setAttribute('content', APP_CONFIG.SEO_DESC||"");
-    if(APP_CONFIG.OG_IMAGE) document.querySelector('meta[property="og:image"]').setAttribute('content', APP_CONFIG.OG_IMAGE);
-  })();
+const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+const T=APP_CONFIG.TEXTS||{
+  buka:"buka", lanjut:"lanjut", bacaSurat:"baca surat", lihatGaleri:"lihat galeri",
+  putarMusik:"putar musik", jedaMusik:"jeda musik", bagikan:"bagikan",
+  menuju:"menuju hari spesial", hariIni:"hari spesialnya hari ini! 🎉",
+  syarat:"jawab minimal 2 benar untuk buka surat",
+  benar:"benar ✅", salah:"hmm belum tepat, coba ingat-ingat lagi 😉",
+  salin:"copy", unduh:"download .txt", placeholderGaleri:"tambahin foto di folder assets/"
+};
 
-  // i18n text assign
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => [...document.querySelectorAll(sel)];
-  const T = APP_CONFIG.TEXTS;
+/* init palette, meta, text */
+(function initMeta(){
+  const pal=APP_CONFIG.PALETA_WARNA||[];
+  const root=document.documentElement;
+  if(pal[0]) root.style.setProperty('--c-accent',pal[0]);
+  if(pal[1]) root.style.setProperty('--c-soft',pal[1]);
+  if(pal[2]) root.style.setProperty('--c-paper',pal[2]);
+  if(pal[3]) root.style.setProperty('--c-text',pal[3]);
+  document.body.style.fontFamily=APP_CONFIG.FONT_STACK;
+  document.title=APP_CONFIG.SEO_TITLE||document.title;
+  document.querySelector('meta[name="description"]').setAttribute('content',APP_CONFIG.SEO_DESC||"");
+  $('#whoTag').textContent=APP_CONFIG.NAMA_PENERIMA;
+  $('#openingLine').textContent=APP_CONFIG.KALIMAT_PEMBUKA;
+  $('#musicBtn').textContent=T.putarMusik;
+})();
 
-  // cover init
-  $('#whoTag').textContent = APP_CONFIG.NAMA_PENERIMA;
-  $('#openingLine').textContent = APP_CONFIG.KALIMAT_PEMBUKA;
-  $('#openBtn').textContent = T.buka;
-  $('#shareBtn').textContent = T.bagikan;
-  $('#musicBtn').textContent = T.putarMusik;
+/* theme toggle */
+(function themeInit(){
+  const key='__theme'; const saved=localStorage.getItem(key);
+  const prefersDark=matchMedia('(prefers-color-scheme: dark)').matches;
+  const mode=saved|| (prefersDark?'dark':'light');
+  document.documentElement.setAttribute('data-theme',mode);
+  const toggle=$('#themeToggle'); toggle.checked=(mode==='dark');
+  toggle.addEventListener('change',()=>{ const m=toggle.checked?'dark':'light'; document.documentElement.setAttribute('data-theme',m); localStorage.setItem(key,m); });
+})();
 
-  // theme toggle
-  (function themeInit(){
-    const key='__theme';
-    const saved = localStorage.getItem(key);
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const current = saved || (prefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', current);
-    const toggle = $('#themeToggle');
-    toggle.checked = (current==='dark');
-    $('#themeLabel').textContent = current==='dark'?'tema gelap':'tema terang';
-    toggle.addEventListener('change', ()=>{
-      const mode = toggle.checked?'dark':'light';
-      document.documentElement.setAttribute('data-theme', mode);
-      localStorage.setItem(key, mode);
-      $('#themeLabel').textContent = mode==='dark'?'tema gelap':'tema terang';
-    });
-  })();
+/* typewriter */
+function typewriter(el, text, speed=28){ el.textContent=''; let i=0; const id=setInterval(()=>{ el.textContent=text.slice(0,++i); if(i>=text.length){clearInterval(id); el.classList.remove('type');}},speed); }
 
-  // typewriter
-  function typewriter(el, text, speed=28){
-    el.textContent='';
-    let i=0;
-    const iv=setInterval(()=>{
-      el.textContent = text.slice(0, ++i);
-      if(i>=text.length) { clearInterval(iv); el.classList.remove('type'); }
-    }, speed);
+/* fireworks (canvas) */
+const fwCanvas=$('#fw'); const fctx=fwCanvas.getContext('2d');
+function resizeFW(){ fwCanvas.width=innerWidth; fwCanvas.height=innerHeight }
+addEventListener('resize',resizeFW); resizeFW();
+let particles=[];
+function firework(x,y){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for(let i=0;i<70;i++){
+    const a=Math.random()*Math.PI*2, v=1+Math.random()*4;
+    particles.push({x,y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, life:60+Math.random()*20, color:`hsl(${Math.random()*360},90%,60%)`});
   }
-
-  // confetti
-  function confettiBurst(count=100){
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const layer = $('#confetti');
-    const colors = [APP_CONFIG.PALETA_WARNA[0]||'#ff6b81','#ffd166','#06d6a0','#118ab2','#ef476f'];
-    for(let i=0;i<count;i++){
-      const p = document.createElement('i');
-      p.style.left = (Math.random()*100)+'vw';
-      p.style.transform = `translateY(-10vh) rotate(${Math.random()*360}deg)`;
-      p.style.background = colors[i%colors.length];
-      p.style.animationDuration = (0.8 + Math.random()*1.8)+'s';
-      layer.appendChild(p);
-      setTimeout(()=>p.remove(), 3000);
-    }
-  }
-
-  // hearts on hover/tap for primary buttons
-  function attachHearts(node){
-    let timer;
-    const spawn = (x,y)=>{
-      const h = document.createElement('span');
-      h.className='heart'; h.textContent='❤';
-      h.style.left = x+'px'; h.style.top = y+'px';
-      h.style.color = APP_CONFIG.PALETA_WARNA[0]||'#ff6b81';
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(),1200);
-    };
-    node.addEventListener('pointerenter', e=>{
-      timer = setInterval(()=>spawn(e.clientX, e.clientY), 160);
-    });
-    node.addEventListener('pointermove', e=>{
-      if(timer) spawn(e.clientX, e.clientY);
-    });
-    ['pointerleave','pointerdown','blur'].forEach(evt=>node.addEventListener(evt, ()=>{ clearInterval(timer); timer=null; }));
-  }
-
-  // cover open
-  attachHearts($('#openBtn'));
-  $('#openBtn').addEventListener('click', ()=>{
-    $('#cover').classList.add('hidden');
-    $('#app').classList.remove('hidden');
-    confettiBurst(120);
-    // hero
-    $('#subHeadline').textContent = APP_CONFIG.KALIMAT_PEMBUKA;
-    typewriter($('#headline'), APP_CONFIG.PESAN_UTAMA_SINGKAT);
-    $('#heroSub').textContent = `untuk ${APP_CONFIG.NAMA_PENERIMA} dari ${APP_CONFIG.NAMA_PENGIRIM}`;
+}
+function loopFW(){
+  fctx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.03; p.life--;
+    fctx.fillStyle=p.color; fctx.fillRect(p.x,p.y,2,2);
   });
+  particles=particles.filter(p=>p.life>0);
+  requestAnimationFrame(loopFW);
+}
+loopFW();
 
-  // countdown
-  const target = new Date(APP_CONFIG.TANGGAL_SPESIAL_ISO);
-  $('#countdownTitle').textContent = T.menuju;
-  function tick(){
-    const now = new Date();
-    let ms = target - now;
-    if(ms<=0){
-      $('#countdownTitle').textContent = T.hariIni;
-      $('#countdownNote').textContent = '';
-      $('#d').textContent='0'; $('#h').textContent='0'; $('#m').textContent='0'; $('#s').textContent='0';
-      if(!tick.fired){ confettiBurst(80); tick.fired=true; }
-      return;
-    }
-    const d = Math.floor(ms/86400000); ms-=d*86400000;
-    const h = Math.floor(ms/3600000); ms-=h*3600000;
-    const m = Math.floor(ms/60000); ms-=m*60000;
-    const s = Math.floor(ms/1000);
+/* confetti (simple dom) */
+function confettiBurst(count=100){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors=[APP_CONFIG.PALETA_WARNA[0]||'#ff6b81','#ffd166','#06d6a0','#118ab2','#ef476f'];
+  for(let i=0;i<count;i++){
+    const e=document.createElement('i'); e.style.position='fixed'; e.style.left=(Math.random()*100)+'vw';
+    e.style.top='-10vh'; e.style.width='8px'; e.style.height='14px'; e.style.background=colors[i%colors.length];
+    e.style.opacity='.95'; e.style.borderRadius='2px'; e.style.zIndex='999'; e.style.transform=`rotate(${Math.random()*360}deg)`;
+    e.style.transition='transform 2.2s linear, top 2.2s linear'; document.body.appendChild(e);
+    requestAnimationFrame(()=>{ e.style.top='110vh'; e.style.transform += ' translateY(120vh) rotate(720deg)';});
+    setTimeout(()=>e.remove(),2400);
+  }
+}
+
+/* parallax tilt */
+function attachTilt(el){
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    const rx=((cy-e.clientY)/r.height)*8, ry=((e.clientX-cx)/r.width)*8;
+    el.style.setProperty('--rx',rx+'deg'); el.style.setProperty('--ry',ry+'deg');
+  });
+  el.addEventListener('mouseleave',()=>{ el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+}
+attachTilt($('#coverCard')); attachTilt($('#hero'));
+
+/* open cover */
+$('#openBtn').addEventListener('click',()=>{
+  $('#cover').classList.add('hidden'); $('#app').classList.remove('hidden');
+  $('#subHeadline').textContent=APP_CONFIG.KALIMAT_PEMBUKA;
+  typewriter($('#headline'),APP_CONFIG.PESAN_UTAMA_SINGKAT);
+  $('#heroSub').textContent=`untuk ${APP_CONFIG.NAMA_PENERIMA} dari ${APP_CONFIG.NAMA_PENGIRIM}`;
+  confettiBurst(140); firework(innerWidth*0.5, innerHeight*0.35);
+});
+
+/* countdown + ring */
+const target=new Date(APP_CONFIG.TANGGAL_SPESIAL_ISO);
+let msStart = Math.max(1, target - new Date());
+function tick(){
+  const now=new Date(); let ms=target-now;
+  if(ms<=0){
+    $('#countdownTitle').textContent=T.hariIni;
+    $('#d').textContent='0'; $('#h').textContent='0'; $('#m').textContent='0'; $('#s').textContent='0';
+    $('#countdownNote').textContent=new Intl.DateTimeFormat(APP_CONFIG.LOKALE,{dateStyle:'full'}).format(target);
+    if(!tick.fired){ confettiBurst(200); firework(innerWidth*0.3, innerHeight*0.4); firework(innerWidth*0.7, innerHeight*0.4); tick.fired=true; }
+  }else{
+    const d=Math.floor(ms/86400000); ms-=d*86400000;
+    const h=Math.floor(ms/3600000); ms-=h*3600000;
+    const m=Math.floor(ms/60000); ms-=m*60000;
+    const s=Math.floor(ms/1000);
     $('#d').textContent=d; $('#h').textContent=h; $('#m').textContent=m; $('#s').textContent=s;
-    $('#countdownNote').textContent = new Intl.DateTimeFormat(APP_CONFIG.LOKALE, { dateStyle:'full', timeStyle:'short'}).format(target);
+    $('#countdownNote').textContent=new Intl.DateTimeFormat(APP_CONFIG.LOKALE,{dateStyle:'full',timeStyle:'short'}).format(target);
+    // ring
+    const ringCirc=327; const ratio = Math.max(0,1-( (target-now) / msStart ));
+    $('#ring').setAttribute('stroke-dashoffset', String(ringCirc*(1-ratio)));
+    $('#ringNum').textContent = Math.round(ratio*100)+'%';
   }
-  tick(); setInterval(tick, 1000);
+}
+tick(); setInterval(tick,1000);
 
-  // quiz
-  const quiz = APP_CONFIG.PERTANYAAN_KUIS.slice(0,3);
-  let idx=0, score=0, chosen=null;
-  function renderQ(){
-    const q = quiz[idx];
-    $('#prog').style.width = ((idx)/quiz.length*100)+'%';
-    $('#quizQ').textContent = q.q;
-    const wrap = $('#choices'); wrap.innerHTML='';
-    q.a.forEach((opt,i)=>{
-      const b = document.createElement('button');
-      b.className='choice'; b.setAttribute('role','option'); b.textContent=opt;
-      b.addEventListener('click', ()=>{
-        chosen=i;
-        if(i===q.correct){ b.classList.add('correct'); $('#clue').textContent=T.benar; score++; }
-        else{ b.classList.add('wrong'); $('#clue').textContent=T.salah; }
-        $$('.choice').forEach(c=>c.disabled=true);
-      });
-      wrap.appendChild(b);
+/* quiz */
+const quiz = APP_CONFIG.PERTANYAAN_KUIS.slice(0,3); let idx=0, score=0, chosen=null;
+function renderQ(){
+  const q=quiz[idx]; $('#quizQ').textContent=q.q; const wrap=$('#choices'); wrap.innerHTML='';
+  $('#prog').style.width=((idx)/quiz.length*100)+'%';
+  q.a.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='choice'; b.textContent=opt; b.setAttribute('role','option');
+    b.addEventListener('click',()=>{ chosen=i; if(i===q.correct){ b.classList.add('correct'); $('#clue').textContent=T.benar; score++; } else { b.classList.add('wrong'); $('#clue').textContent=T.salah; } $$('.choice').forEach(c=>c.disabled=true); });
+    wrap.appendChild(b);
+  });
+  $('#scoreTag').textContent=`skor: ${score}/${quiz.length}`; $('#clue').textContent=T.syarat;
+}
+renderQ();
+$('#nextBtn').addEventListener('click',()=>{
+  if(chosen===null){ $('#clue').textContent='pilih dulu ya 😊'; return; }
+  idx++; chosen=null;
+  if(idx>=quiz.length){
+    $('#prog').style.width='100%'; $('#scoreTag').textContent=`skor: ${score}/${quiz.length}`;
+    $('#clue').textContent=score>=2?'kamu lulus! tekan "baca surat"':'belum cukup, coba ulang ya ✨';
+    $('#unlockBtn').disabled=!(score>=2); idx=quiz.length-1;
+  } else renderQ();
+});
+$('#unlockBtn').addEventListener('click',()=>{
+  if(score<2) return;
+  $('#letterSec').classList.remove('hidden'); $('#toName').textContent=APP_CONFIG.NAMA_PENERIMA;
+  renderMarkdown('#letter', APP_CONFIG.SURAT_PANJANG); confettiBurst(100); firework(innerWidth*0.5, innerHeight*0.4);
+});
+/* markdown minimal */
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+function renderMarkdown(sel, md){
+  const html = md.split('\n\n').map(block=>{
+    const b = block.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .split('\n').map(l=>escapeHtml(l)).join('<br>');
+    return `<p>${b}</p>`;
+  }).join('');
+  $(sel).innerHTML=html;
+}
+/* copy & download */
+$('#copyBtn').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(APP_CONFIG.SURAT_PANJANG); $('#copyBtn').textContent='tersalin ✔'; setTimeout(()=>$('#copyBtn').textContent='copy',1500);}catch{} });
+$('#downloadBtn').addEventListener('click', ()=>{
+  const blob=new Blob([APP_CONFIG.SURAT_PANJANG],{type:'text/plain'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=`surat-untuk-${APP_CONFIG.NAMA_PENERIMA.replace(/\s+/g,'-').toLowerCase()}.txt`; a.click(); URL.revokeObjectURL(a.href);
+});
+
+/* timeline build */
+(function buildTimeline(){
+  const t=$('#timeline'); const arr=APP_CONFIG.TIMELINE||[];
+  arr.forEach(item=>{
+    const el=document.createElement('div'); el.className='titem';
+    el.innerHTML=`<img src="${item.img||''}" alt="${item.title||'momen'}">
+      <h3 style="margin:8px 0 4px 0">${escapeHtml(item.title||'momen')}</h3>
+      <p class="muted" style="margin:0">${new Intl.DateTimeFormat(APP_CONFIG.LOKALE,{dateStyle:'medium'}).format(new Date(item.date||Date.now()))}</p>
+      <p style="margin-top:6px">${escapeHtml(item.note||'')}</p>`;
+    t.appendChild(el);
+  });
+})();
+
+/* gallery polaroid with scatter & drag */
+let scattered=false; const gal=$('#gallery'); buildGallery();
+function buildGallery(){
+  gal.innerHTML='';
+  const imgs=(APP_CONFIG.GALERI_GAMBAR||[]).filter(Boolean);
+  if(!imgs.length){ const ph=document.createElement('div'); ph.className='muted'; ph.textContent=T.placeholderGaleri; gal.appendChild(ph); return; }
+  imgs.forEach((src,i)=>{
+    const fig=document.createElement('figure'); fig.className='polaroid draggable'; fig.style.setProperty('--rot',(Math.random()*10-5)+'deg');
+    const img=new Image(); img.src=src; img.alt=`memori ${i+1}`; img.loading='lazy'; img.decoding='async';
+    img.addEventListener('click',()=>openLB(src)); fig.appendChild(img);
+    const cap=document.createElement('figcaption'); cap.textContent=''; fig.appendChild(cap);
+    gal.appendChild(fig);
+  });
+}
+function openLB(src){ $('#lbImg').src=src; $('#lightbox').classList.remove('hidden'); $('#lbClose').focus(); }
+$('#lbClose').addEventListener('click',()=>$('#lightbox').classList.add('hidden'));
+$('#lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox') $('#lightbox').classList.add('hidden'); });
+
+$('#scatterBtn').addEventListener('click',()=>{
+  scattered=true;
+  $$('.draggable').forEach(el=>{
+    el.style.position='absolute'; el.style.left=(Math.random()*70+5)+'%'; el.style.top=(Math.random()*40+5)+'%'; el.style.transform=`translate(-50%,-50%) rotate(${(Math.random()*20-10).toFixed(1)}deg)`;
+    makeDraggable(el);
+  });
+  gal.style.position='relative'; gal.style.height='68vh';
+});
+$('#resetScatter').addEventListener('click',()=>{
+  scattered=false; buildGallery(); gal.style.height='auto';
+});
+function makeDraggable(el){
+  let sx=0, sy=0, dragging=false;
+  el.addEventListener('pointerdown',e=>{ dragging=true; el.classList.add('dragging'); sx=e.clientX- (parseFloat(el.style.left)||0); sy=e.clientY- (parseFloat(el.style.top)||0); el.setPointerCapture(e.pointerId); });
+  el.addEventListener('pointermove',e=>{ if(!dragging) return; el.style.left=(e.clientX - sx)+'px'; el.style.top=(e.clientY - sy)+'px'; });
+  el.addEventListener('pointerup',()=>{ dragging=false; el.classList.remove('dragging'); });
+}
+
+/* wish board */
+const board=$('#board'); const keyWish='__wishes';
+function renderWishes(){
+  board.innerHTML=''; const Ws=JSON.parse(localStorage.getItem(keyWish)||'[]');
+  Ws.forEach(w=>{
+    const d=document.createElement('div'); d.className='heartNote'; d.textContent=w.text;
+    d.style.left=w.x+'%'; d.style.top=w.y+'%'; board.appendChild(d);
+  });
+}
+renderWishes();
+$('#addWish').addEventListener('click',()=>{
+  const v=$('#wishInput').value.trim(); if(!v) return;
+  const x=10+Math.random()*80, y=10+Math.random()*75;
+  const Ws=JSON.parse(localStorage.getItem(keyWish)||'[]'); Ws.push({text:v,x,y}); localStorage.setItem(keyWish,JSON.stringify(Ws));
+  $('#wishInput').value=''; renderWishes();
+});
+$('#clearWish').addEventListener('click',()=>{ localStorage.removeItem(keyWish); renderWishes(); });
+
+/* voice recorder (local) */
+const recBtn=$('#recBtn'), stopBtn=$('#stopBtn'), audio=$('#playback'), saveA=$('#saveAudio');
+let media, recorder, chunks=[];
+recBtn.addEventListener('click',async ()=>{
+  try{
+    media = await navigator.mediaDevices.getUserMedia({audio:true});
+    recorder = new MediaRecorder(media); chunks=[];
+    recorder.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data); };
+    recorder.onstop=()=>{
+      const blob=new Blob(chunks,{type:'audio/webm'}); const url=URL.createObjectURL(blob);
+      audio.src=url; saveA.href=url; saveA.style.display='inline-flex';
+    };
+    recorder.start(); recBtn.disabled=true; stopBtn.disabled=false; recBtn.textContent='merekam...';
+  }catch{ recBtn.textContent='izin mic ditolak'; }
+});
+stopBtn.addEventListener('click',()=>{ if(recorder && recorder.state!=='inactive'){ recorder.stop(); media.getTracks().forEach(t=>t.stop()); } recBtn.disabled=false; stopBtn.disabled=true; recBtn.textContent='mulai rekam'; });
+
+/* music */
+const bgm=$('#bgm'); const musicBtn=$('#musicBtn');
+if(APP_CONFIG.MUSIK_LATAR){ bgm.src=APP_CONFIG.MUSIK_LATAR; bgm.volume=.4; bgm.addEventListener('canplay',()=>musicBtn.disabled=false); bgm.addEventListener('error',()=>musicBtn.disabled=true); }
+musicBtn.addEventListener('click', async ()=>{ try{ if(bgm.paused){ await bgm.play(); musicBtn.textContent=T.jedaMusik; } else { bgm.pause(); musicBtn.textContent=T.putarMusik; } }catch{} });
+
+/* share WA */
+$('#shareBtn').addEventListener('click',()=>{
+  const text=`hai ${APP_CONFIG.NAMA_PENERIMA}, buka web ini ya: ${location.href}\n\n${APP_CONFIG.PESAN_UTAMA_SINGKAT}`;
+  location.href = APP_CONFIG.CTA_WHATSAPP + encodeURIComponent(text);
+});
+
+/* footer */
+$('#emoji').textContent=APP_CONFIG.FALLBACK_EMOJI||'💖'; $('#fromName').textContent=APP_CONFIG.NAMA_PENGIRIM;
+
+/* simple SW (PWA-lite) */
+(function registerSW(){
+  if(!('serviceWorker' in navigator)) return;
+  const version='v2.0.0';
+  const assets=['.'].concat((APP_CONFIG.GALERI_GAMBAR||[]), [APP_CONFIG.MUSIK_LATAR, APP_CONFIG.OG_IMAGE]).filter(Boolean);
+  const sw=`
+    const CACHE='love_${version}_'+Date.now();
+    const ASSETS=${JSON.stringify(assets)};
+    self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
+    self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('love_')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+    self.addEventListener('fetch',e=>{ const r=e.request; if(r.method!=='GET') return;
+      e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{ const cp=res.clone(); caches.open(CACHE).then(c=>{try{c.put(r,cp)}catch(e){}}); return res; }).catch(()=>caches.match('./'))));
     });
-    $('#scoreTag').textContent = `skor: ${score}/${quiz.length}`;
-    $('#clue').textContent = APP_CONFIG.TEXTS.syarat;
-  }
-  renderQ();
+  `;
+  const blob=new Blob([sw],{type:'text/javascript'}); const url=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url).catch(()=>{}); setTimeout(()=>URL.revokeObjectURL(url),4000);
+})();
+</script>
 
-  $('#nextBtn').textContent = T.lanjut;
-  $('#nextBtn').addEventListener('click', ()=>{
-    if(chosen===null){ $('#clue').textContent='pilih dulu ya 😊'; return; }
-    idx++; chosen=null;
-    if(idx>=quiz.length){
-      $('#prog').style.width='100%';
-      $('#scoreTag').textContent = `skor: ${score}/${quiz.length}`;
-      $('#clue').textContent = score>=2 ? 'kamu lulus! tekan "baca surat"' : 'belum cukup, coba ulang ya ✨';
-      $('#unlockBtn').disabled = !(score>=2);
-      idx = quiz.length-1; // lock at end
-    } else {
-      renderQ();
-    }
-  });
+<!--
+========================
+ASSET SARAN (opsional)
+========================
+- /assets/foto1.jpg, foto2.jpg, foto3.jpg — 1600x1200, <300KB
+- /assets/love.mp3 — 20–40 detik, 128kbps, <1.5MB
+- /assets/og.jpg — 1200x630, <200KB
 
-  $('#unlockBtn').textContent = T.bacaSurat;
-  $('#unlockBtn').addEventListener('click', ()=>{
-    if(score<2) return;
-    $('#letterSec').classList.remove('hidden');
-    $('#toName').textContent = APP_CONFIG.NAMA_PENERIMA;
-    renderMarkdown('#letter', APP_CONFIG.SURAT_PANJANG);
-    confettiBurst(80);
-    $('#unlockBtn').disabled = true;
-  });
+TES CEPAT
+- buka → fireworks + confetti muncul; hero tilt saat diarahkan kursor.
+- countdown & ring jalan; di hari-H: "hari spesialnya hari ini! 🎉" + fireworks kanan-kiri.
+- kuis ≥2 benar → surat kebuka.
+- timeline: geser horizontal.
+- galeri: "scatter & drag" untuk seret; "rapikan" untuk balik grid.
+- pohon harapan: tambah hati; reload tetap ada (localStorage).
+- voice note: klik "mulai rekam" → berhenti → dengarkan → download .webm.
+- PWA-lite: setelah 1x load, coba offline → halaman tetap muncul (kecuali aset yg belum tercache).
 
-  // markdown minimal: **bold**, *italic*, paragraphs and line breaks
-  function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-  function renderMarkdown(sel, md){
-    const html = md
-      .split('\n\n').map(block=>{
-        const b = block
-          .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-          .replace(/\*(.+?)\*/g,'<em>$1</em>')
-          .split('\n').map(l=>escapeHtml(l)).join('<br>');
-        return `<p>${b}</p>`;
-      }).join('');
-    $(sel).innerHTML = html;
-  }
-
-  // copy & download
-  $('#copyBtn').textContent = T.salin;
-  $('#copyBtn').addEventListener('click', async ()=>{
-    try{ await navigator.clipboard.writeText(APP_CONFIG.SURAT_PANJANG); $('#copyBtn').textContent='tersalin ✔'; setTimeout(()=>$('#copyBtn').textContent=T.salin,1500);}catch{}
-  });
-  $('#downloadBtn').textContent = T.unduh;
-  $('#downloadBtn').addEventListener('click', ()=>{
-    const blob = new Blob([APP_CONFIG.SURAT_PANJANG], {type:'text/plain'});
-    const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download = `surat-untuk-${APP_CONFIG.NAMA_PENERIMA.replace(/\s+/g,'-').toLowerCase()}.txt`; a.click();
-    URL.revokeObjectURL(a.href);
-  });
-
-  // gallery
-  function makePlaceholder(){
-    const ph = document.createElement('figure'); ph.className='ph card';
-    ph.innerHTML = `<div class="ph">${APP_CONFIG.TEXTS.placeholderGaleri}</div>`;
-    return ph;
-  }
-  function buildGallery(){
-    const g = $('#gallery'); g.innerHTML='';
-    const arr = (APP_CONFIG.GALERI_GAMBAR||[]).filter(Boolean);
-    if(!arr.length){ g.append(makePlaceholder(), makePlaceholder(), makePlaceholder()); return; }
-    arr.forEach((src,i)=>{
-      const f = document.createElement('figure');
-      const img = document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.alt=`memori ${i+1}`;
-      img.src=src;
-      img.addEventListener('click', ()=>openLightbox(src,i));
-      f.appendChild(img); g.appendChild(f);
-    });
-  }
-  buildGallery();
-
-  // lightbox with keyboard
-  let lbIndex=0;
-  function openLightbox(src, i){
-    lbIndex=i;
-    $('#lbImg').src=src;
-    $('#lightbox').classList.add('open');
-    $('#lbClose').focus();
-  }
-  function closeLightbox(){
-    $('#lightbox').classList.remove('open');
-    $('#lbImg').src='';
-  }
-  $('#openGal').textContent = T.lihatGaleri;
-  $('#openGal').addEventListener('click', ()=>{
-    const arr=APP_CONFIG.GALERI_GAMBAR||[];
-    if(arr.length) openLightbox(arr[0],0);
-  });
-  $('#lbClose').addEventListener('click', closeLightbox);
-  $('#lightbox').addEventListener('click', e=>{ if(e.target.id==='lightbox') closeLightbox(); });
-  window.addEventListener('keydown', e=>{
-    if(!$('#lightbox').classList.contains('open')) return;
-    const arr=APP_CONFIG.GALERI_GAMBAR||[];
-    if(e.key==='Escape') closeLightbox();
-    if(e.key==='ArrowRight'){ lbIndex=(lbIndex+1)%arr.length; $('#lbImg').src=arr[lbIndex]; }
-    if(e.key==='ArrowLeft'){ lbIndex=(lbIndex-1+arr.length)%arr.length; $('#lbImg').src=arr[lbIndex]; }
-  });
-
-  // music
-  const bgm = $('#bgm');
-  const musicBtn = $('#musicBtn');
-  let musicReady=false;
-  if(APP_CONFIG.MUSIK_LATAR){
-    bgm.src = APP_CONFIG.MUSIK_LATAR;
-    bgm.volume = 0.4;
-    bgm.addEventListener('canplay', ()=>{ musicReady=true; musicBtn.disabled=false; });
-    bgm.addEventListener('error', ()=>{ musicBtn.disabled=true; musicBtn.title='file musik tidak ditemukan'; });
-  }
-  musicBtn.addEventListener('click', async ()=>{
-    try{
-      if(bgm.paused){ await bgm.play(); musicBtn.textContent=T.jedaMusik; }
-      else{ bgm.pause(); musicBtn.textContent=T.putarMusik; }
-    }catch(e){ musicBtn.title='izin diperlukan untuk memutar audio'; }
-  });
-
-  // share whatsapp
-  function buildShareText(){
-    const url = location.href;
-    const text = `hai ${APP_CONFIG.NAMA_PENERIMA}, buka web ini ya: ${url}\n\n${APP_CONFIG.PESAN_UTAMA_SINGKAT}`;
-    return APP_CONFIG.CTA_WHATSAPP + encodeURIComponent(text);
-  }
-  $('#shareBtn').addEventListener('click', ()=>{ location.href = buildShareText(); });
-
-  // footer names and emoji
-  $('#emoji').textContent = APP_CONFIG.FALLBACK_EMOJI || '💖';
-  $('#fromName').textContent = APP_CONFIG.NAMA_PENGIRIM;
-
-  // PWA-lite Service Worker via Blob
-  (function registerSW(){
-    if(!('serviceWorker' in navigator)) return;
-    const version='v1.0.3';
-    const assets = ['.'].concat((APP_CONFIG.GALERI_GAMBAR||[]), [APP_CONFIG.MUSIK_LATAR, APP_CONFIG.OG_IMAGE]).filter(Boolean);
-    const swCode = `
-      const VERSION='${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.floor(Math.random()*1e6)}';
-      const CACHE='love_${version}_'+VERSION;
-      const ASSETS=${JSON.stringify(assets)};
-      self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())) });
-      self.addEventListener('activate',e=>{ e.waitUntil(
-        caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('love_') && k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())
-      )});
-      self.addEventListener('fetch',e=>{
-        const req=e.request; if(req.method!=='GET') return;
-        e.respondWith(
-          caches.match(req).then(r=> r || fetch(req).then(res=>{
-            const copy=res.clone();
-            caches.open(CACHE).then(c=>{ try{ c.put(req, copy) }catch(e){} });
-            return res;
-          }).catch(()=>caches.match('./')))
-        );
-      });`;
-    const blob = new Blob([swCode], {type:'text/javascript'});
-    const url = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(url).catch(()=>{});
-    setTimeout(()=>URL.revokeObjectURL(url), 5000);
-  })();
-  </script>
-
-  <!--
-  ================================
-  DEPLOY (Github Pages) — 4 langkah
-  ================================
-  1) buat repo baru → upload file ini sebagai `index.html`.
-  2) (opsional) buat folder `assets/` dan isi:
-     - foto1.jpg, foto2.jpg, foto3.jpg — disarankan 1600x1200, <300KB tiap file (jpeg).
-     - love.mp3 — 20–40 detik, 128kbps CBR, <1.5MB.
-     - og.jpg — 1200x630, <200KB.
-  3) Settings → Pages → "Deploy from branch" (branch: main, folder: /root).
-  4) buka URL yang muncul → test offline, kuis, share WA.
-
-  =================
-  CEK & PENGUJIAN
-  =================
-  - Countdown:
-    • Sebelum 2025-09-02 00:00 +07:00: timer menurun.
-    • Setelah lewat: teks berubah ke "hari spesialnya hari ini! 🎉" + confetti.
-  - Kuis:
-    • Kasus 0/3 → tombol "baca surat" tetap disabled.
-    • Kasus 2/3 → tombol "baca surat" aktif.
-    • Kasus 3/3 → aktif (skor penuh).
-  - Offline:
-    • Setelah halaman kebuka sekali, matikan internet → konten tetap bisa diakses (kecuali musik jika belum tercache).
-  - Galeri:
-    • Klik gambar membuka lightbox; esc untuk tutup; panah kiri/kanan untuk navigasi.
-  - Tema:
-    • Toggle gelap/terang bekerja; preferensi disimpan di localStorage.
-
-  Catatan:
-  - Semua teks bisa diedit via window.APP_CONFIG (bagian TEXTS juga bisa kamu ubah).
-  - Tidak ada dependensi eksternal, tidak ada tracking, tidak ada font CDN.
-  - A11y: tombol bisa di-tab, focus ring jelas, kontras dijaga.
-
-  Versi: 1.0.3
-  -->
+Catatan:
+- Semua teks & tanggal bisa diubah di window.APP_CONFIG.
+- Tidak ada dependency eksternal. A11y & dark mode aktif.
+-->
 </body>
 </html>
