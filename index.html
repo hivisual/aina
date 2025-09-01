@@ -60,8 +60,6 @@
 
     /* generic content helpers */
     .content-center{display:grid; place-items:center; height:100%; text-align:center; gap:14px;}
-    
-    /* === REVISI: START === */
     .content-stack {
       display: flex;
       flex-direction: column;
@@ -76,7 +74,6 @@
       margin: 0;
       line-height: 1.5;
     }
-    /* === REVISI: END === */
 
     .fullimg{ position:relative; width:100%; height:100%; display:grid; place-items:center; }
     .fullimg img{ max-width:100%; max-height:100%; object-fit:contain; display:block; border-radius:14px; box-shadow:0 6px 24px rgba(0,0,0,.12); }
@@ -98,6 +95,9 @@
     .choices{ display:grid; gap:10px; margin-top:8px }
     .choice{ padding:12px 14px; border:1px solid rgba(0,0,0,.12); border-radius:12px; cursor:pointer; background:#fff; text-align:left; font-size:16px; width:100%; }
     .choice:disabled{ opacity:.7 }
+    .choice.correct { border-color: #28a745; background-color: #e9f7ec; }
+    .choice.wrong { border-color: #dc3545; background-color: #fceeef; }
+
 
     .typewriter-text{ width:fit-content; margin-inline:auto; overflow:hidden; white-space:nowrap; border-right:2px solid var(--c-accent); animation:typing 2s steps(30, end), blink-caret .75s step-end infinite; }
     @keyframes typing{ from{width:0} to{width:100%} }
@@ -242,20 +242,31 @@
     PAGE_19: { COPY: "terima kasih sudah jadi rumah ternyaman buat mas." },
     PAGE_20: { CLOSING: "dibuat dengan ❤️ oleh mas aren. kalau ade mau simpan, tekan tombol di bawah." },
 
-    // Kuis (5 Pertanyaan — profil A/B/C)
+    // === REVISI: START ===
+    // Kuis (5 Pertanyaan dengan Jawaban Benar)
     PERTANYAAN_KUIS: [
-      { q:"film yang pertama kita nonton bareng?", a:[{t:"pengeepungan bukit duri", p:"A"}, {t:"sebelum maghrib", p:"B"}, {t:"13 bom di jakarta", p:"C"}] },
-      { q:"tempat pertama kita maem bareng?", a:[{t:"depot tanjung api", p:"A"}, {t:"watu uleg", p:"B"}, {t:"kodam", p:"C"}] },
-      { q:"Kita pertama chatan hari apa?", a:[{t:"rabu", p:"A"}, {t:"kamis", p:"B"}, {t:"jumat", p:"C"}] },
-      { q:"kapan pertama kita vc?", a:[{t:"sebelum first meet", p:"A"}, {t:"setelah first meet", p:"B"}, {t:"setelah lebaran", p:"C"}] },
-      { q:"ade paling suka diapain?", a:[{t:"dikasih pujian", p:"A"}, {t:"dimarahi", p:"B"}, {t:"dicuekin", p:"C"}] },
+      { q:"film yang pertama kita nonton bareng?", a:["pengeepungan bukit duri", "sebelum maghrib", "13 bom di jakarta"], correct: 2 },
+      { q:"tempat pertama kita maem bareng?", a:["depot tanjung api", "watu uleg", "kodam"], correct: 1 },
+      { q:"Kita pertama chatan hari apa?", a:["rabu", "kamis", "jumat"], correct: 0 },
+      { q:"kapan pertama kita vc?", a:["sebelum first meet", "setelah first meet", "setelah lebaran"], correct: 1 },
+      { q:"ade paling suka diapain?", a:["dikasih pujian", "dimarahi", "dicuekin"], correct: 0 }
     ],
-    HASIL_KUIS_PROFIL: {
-      A: { title: "Si Penjaga Memori", desc: "ade inget detail kecil, bahkan yang mas sendiri lupa. mas beruntung punya kamu." },
-      B: { title: "Tim Tawa & Jajan", desc: "bahagia versimu sederhana, dan itu bikin mas ketularan. nanti kita rayain dengan makan enak via vc, deal?" },
-      C: { title: "Si Malam Panjang", desc: "jam curhat favorit: tengah malam. mas siap jadi rumah paling tenang buat ade." },
-      default: { title: "Partner Terbaik", desc: "apapun hasilnya, kamu tetap partner terbaik mas. makasih udah main bareng!" },
+    // Hasil Kuis Berdasarkan Skor
+    HASIL_KUIS_SKOR: {
+      tinggi: { // 4-5 Benar
+        title: "Ingatan Ade Sempurna! 😭🤍",
+        desc: "Mas beneran terharu, de. Kamu inget semua detail kecil perjalanan kita. Ini bukti kalo setiap momen sama mas itu berarti buat ade. Makasih ya udah jadi partner memori terbaik. Peluk jauuh!"
+      },
+      sedang: { // 2-3 Benar
+        title: "Hehe, Kita Tim yang Hebat! ❤️",
+        desc: "Beberapa ada yang kelupaan dikit yaa? Gapapa, sayang! Itu artinya kita masih harus bikin banyaak lagi kenangan baru biar makin nempel di ingatan. Yang penting, kita udah lewatin semuanya bareng."
+      },
+      rendah: { // 0-1 Benar
+        title: "Waktunya Bikin Memori Baru! ✨",
+        desc: "Lupa sama detailnya? Justru ini seru! Artinya, petualangan kita masih panjang dan banyak halaman kosong yang harus kita isi bareng-bareng. Mas siap nemenin ade bikin cerita baru, setiap hari."
+      }
     },
+    // === REVISI: END ===
   };
 
   const $ = (s)=>document.querySelector(s);
@@ -397,7 +408,7 @@
     prefetch(T.FOTO_3_GALERI);
   }
 
-  function render4(){ // Alasan - REVISED
+  function render4(){ // Alasan
     setContent(`
       <div class="content-stack">
         <h2 class="muted">${T.PAGE_04.TITLE}</h2>
@@ -429,7 +440,7 @@
     $('#zoomSurat').addEventListener('click', ()=>openLightbox(T.FOTO_4_SURAT));
   }
 
-  function render7(){ // Hadiah - REVISED
+  function render7(){ // Hadiah
     setContent(`
       <div class="content-stack">
         <h2>${T.PAGE_07.TITLE}</h2>
@@ -441,7 +452,7 @@
     `, 'fade');
   }
 
-  function render8(){ // Checklist (autosave) - REVISED
+  function render8(){ // Checklist (autosave)
     setContent(`
       <div class="content-stack">
         <h2>${T.PAGE_08.TITLE}</h2>
@@ -462,40 +473,78 @@
     $('#mulaiKuis').addEventListener('click', ()=>{ setPage(10); renderPage('slide'); });
   }
 
+  // === REVISI: START ===
   function renderQuiz(qIndex){
     const data=T.PERTANYAAN_KUIS[qIndex];
     setContent(`
       <div class="quiz">
         <div><h2>Kuis ${qIndex+1}/5</h2><h1 style="margin-top:6px">${data.q}</h1></div>
-        <div class="choices" id="choices">${data.a.map(opt=>`<button class="choice" data-profile="${opt.p}">${opt.t}</button>`).join('')}</div>
+        <div class="choices" id="choices">${data.a.map((opt, i)=>`<button class="choice" data-index="${i}">${opt}</button>`).join('')}</div>
       </div>
     `, 'fade');
     $$('.choice').forEach(b=>{
       b.addEventListener('click', ()=>{
-        answers[qIndex]=b.dataset.profile; localStorage.setItem('__quiz_answers', JSON.stringify(answers));
-        $$('.choice').forEach(c=>c.disabled=true); b.style.borderColor='var(--c-accent)';
-        setTimeout(()=>{ if(page<LAST_PAGE){ setPage(page+1); renderPage('slide'); } }, 260);
+        const chosenIndex = parseInt(b.dataset.index);
+        answers[qIndex] = chosenIndex;
+        localStorage.setItem('__quiz_answers', JSON.stringify(answers));
+        
+        // Menampilkan feedback benar/salah secara visual
+        $$('.choice').forEach((btn, index) => {
+          btn.disabled = true;
+          if (index === data.correct) {
+            btn.classList.add('correct');
+          } else if (index === chosenIndex) {
+            btn.classList.add('wrong');
+          }
+        });
+
+        setTimeout(()=>{ if(page<LAST_PAGE){ setPage(page+1); renderPage('slide'); } }, 800); // Waktu jeda agar bisa lihat feedback
       });
     });
   }
 
   function render15(){ // Hasil kuis
-    const count={A:0,B:0,C:0}; answers.forEach(v=>{ if(v) count[v]++; });
-    const order=['A','B','C']; order.sort((x,y)=>count[y]-count[x]);
-    const top = count[order[0]]===count[order[1]] && count[order[0]]!==0 ? 'default' : order[0];
-    const result=T.HASIL_KUIS_PROFIL[top]||T.HASIL_KUIS_PROFIL.default;
+    let score = 0;
+    for (let i = 0; i < T.PERTANYAAN_KUIS.length; i++) {
+        if (answers[i] === T.PERTANYAAN_KUIS[i].correct) {
+            score++;
+        }
+    }
+
+    let result;
+    if (score >= 4) {
+        result = T.HASIL_KUIS_SKOR.tinggi;
+        confettiBurst(150); // Apresiasi lebih dengan confetti
+    } else if (score >= 2) {
+        result = T.HASIL_KUIS_SKOR.sedang;
+    } else {
+        result = T.HASIL_KUIS_SKOR.rendah;
+    }
+    
     setContent(`
-      <div class="content-center"><div><h2 class="muted">Hasil Kuis Kamu:</h2><h1>${result.title}</h1><p>${result.desc}</p><button class="btn" id="hug" style="margin-top:12px">Klaim Peluk Virtual 🤍</button></div></div>
+      <div class="content-center"><div>
+        <h2 class="muted">Hasil Kuis Kenangan Kita:</h2>
+        <h1>${result.title}</h1>
+        <p>${result.desc}</p>
+        <p style="margin-top:12px; font-weight:bold;">Skor Ade: ${score} / 5</p>
+        <button class="btn" id="hug" style="margin-top:12px">Apapun Hasilnya, Sini Peluk Dulu 🤍</button>
+      </div></div>
     `, 'fade');
-    $('#hug').addEventListener('click', ()=>{ confettiBurst(140); const b=$('#hug'); b.style.transform='scale(1.06)'; setTimeout(()=>b.style.transform='scale(1)',120); });
+    $('#hug').addEventListener('click', ()=>{ 
+        confettiBurst(140); 
+        const b=$('#hug'); 
+        b.style.transform='scale(1.06)'; 
+        setTimeout(()=>b.style.transform='scale(1)',120); 
+    });
   }
+  // === REVISI: END ===
 
   function render16(){ // Doa & Harapan
     setContent(`<div class="content-center"><div><h2>${T.PAGE_16.TITLE}</h2><p id="doa" class="muted" style="max-width:92%;margin:6px auto 0"></p></div></div>`, 'fade');
     typewriter($('#doa'), T.PAGE_16.PRAYER);
   }
 
-  function render17(){ // Janji kecil - REVISED
+  function render17(){ // Janji kecil
     setContent(`<div class="content-stack"><h2>${T.PAGE_17.TITLE}</h2><ul class="checklist">${T.PAGE_17.PROMISES.map(x=>`<li><input type="checkbox" checked disabled><span>${x}</span></li>`).join('')}</ul><p class="muted">janji ini emang sederhana, tapi mas serius ngejaganyaa</p></div>`, 'fade');
   }
 
