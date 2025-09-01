@@ -60,6 +60,24 @@
 
     /* generic content helpers */
     .content-center{display:grid; place-items:center; height:100%; text-align:center; gap:14px;}
+    
+    /* === REVISI: START === */
+    .content-stack {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Memusatkan blok konten secara vertikal */
+      height: 100%;
+      text-align: center;
+      gap: 20px; /* Jarak antara judul dan konten */
+    }
+    .reason-card p {
+      font-size: 18px; /* Ukuran font diubah agar tidak terlalu besar */
+      color: var(--c-text); /* Warna diubah agar tidak terlalu pekat */
+      margin: 0;
+      line-height: 1.5;
+    }
+    /* === REVISI: END === */
+
     .fullimg{ position:relative; width:100%; height:100%; display:grid; place-items:center; }
     .fullimg img{ max-width:100%; max-height:100%; object-fit:contain; display:block; border-radius:14px; box-shadow:0 6px 24px rgba(0,0,0,.12); }
     .cover-bg{ position:absolute; inset:0; background-size:cover; background-position:center; filter:brightness(.92); }
@@ -379,11 +397,13 @@
     prefetch(T.FOTO_3_GALERI);
   }
 
-  function render4(){ // Alasan
+  function render4(){ // Alasan - REVISED
     setContent(`
-      <h2 class="muted">${T.PAGE_04.TITLE}</h2>
-      <div id="cards" style="display:grid;gap:10px;margin-top:8px; align-content:center; height:90%;">
-        ${T.PAGE_04.REASONS.map((x,i)=>`<div class="reason-card" style="animation-delay:${i*0.1}s"><h1 style="font-size:20px">${x.replace(/<strong>/g,'<b>').replace(/<\/strong>/g,'</b>')}</h1></div>`).join('')}
+      <div class="content-stack">
+        <h2 class="muted">${T.PAGE_04.TITLE}</h2>
+        <div id="cards" style="display:grid;gap:10px;">
+          ${T.PAGE_04.REASONS.map((x,i)=>`<div class="reason-card" style="animation-delay:${i*0.1}s"><p>${x.replace(/<strong>/g,'<b>').replace(/<\/strong>/g,'</b>')}</p></div>`).join('')}
+        </div>
       </div>
     `, 'fade');
   }
@@ -409,9 +429,9 @@
     $('#zoomSurat').addEventListener('click', ()=>openLightbox(T.FOTO_4_SURAT));
   }
 
-  function render7(){ // Hadiah
+  function render7(){ // Hadiah - REVISED
     setContent(`
-      <div class="content-center" style="gap:16px;">
+      <div class="content-stack">
         <h2>${T.PAGE_07.TITLE}</h2>
         <div style="display:grid;gap:12px;width:90%;max-width:560px;margin:0 auto">
           ${T.PAGE_07.GIFTS.map(g=>`<div class="gift-card"><h3 style="margin:0 0 4px 0">${g.icon} ${g.title}</h3><p class="muted" style="margin:0">${g.desc}</p></div>`).join('')}
@@ -421,9 +441,9 @@
     `, 'fade');
   }
 
-  function render8(){ // Checklist (autosave)
+  function render8(){ // Checklist (autosave) - REVISED
     setContent(`
-      <div class="content-center" style="gap:16px;">
+      <div class="content-stack">
         <h2>${T.PAGE_08.TITLE}</h2>
         <ul class="checklist" id="cl"></ul>
       </div>
@@ -475,8 +495,8 @@
     typewriter($('#doa'), T.PAGE_16.PRAYER);
   }
 
-  function render17(){ // Janji kecil
-    setContent(`<div class="content-center" style="gap:16px;"><h2>${T.PAGE_17.TITLE}</h2><ul class="checklist">${T.PAGE_17.PROMISES.map(x=>`<li><input type="checkbox" checked disabled><span>${x}</span></li>`).join('')}</ul><p class="muted">janji ini emang sederhana, tapi mas serius ngejaganyaa</p></div>`, 'fade');
+  function render17(){ // Janji kecil - REVISED
+    setContent(`<div class="content-stack"><h2>${T.PAGE_17.TITLE}</h2><ul class="checklist">${T.PAGE_17.PROMISES.map(x=>`<li><input type="checkbox" checked disabled><span>${x}</span></li>`).join('')}</ul><p class="muted">janji ini emang sederhana, tapi mas serius ngejaganyaa</p></div>`, 'fade');
   }
 
   function render18(){ // Blow the candle (swipe up)
